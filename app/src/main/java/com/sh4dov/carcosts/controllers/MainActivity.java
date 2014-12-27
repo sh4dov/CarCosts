@@ -1,34 +1,31 @@
 package com.sh4dov.carcosts.controllers;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.sh4dov.carcosts.R;
+import com.sh4dov.carcosts.infrastructure.FragmentFactory;
+import com.sh4dov.carcosts.infrastructure.FragmentOperator;
 import com.sh4dov.carcosts.infrastructure.SectionsPagerAdapter;
 
-
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements FragmentOperator {
+    private ViewPager viewPager;
+    private SectionsPagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SectionsPagerAdapter pagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+        pagerAdapter = new SectionsPagerAdapter(getFragmentManager(), this, this);
 
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(pagerAdapter);
-
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(FragmentFactory.FragmentPosition.AddRefueling);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -52,6 +49,13 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void goToFragment(int fragmentId) {
+        viewPager.setCurrentItem(fragmentId);
+    }
 
-
+    @Override
+    public void reload() {
+        pagerAdapter.notifyDataSetChanged();
+    }
 }
