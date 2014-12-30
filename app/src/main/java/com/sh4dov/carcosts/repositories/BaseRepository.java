@@ -51,14 +51,14 @@ public abstract class BaseRepository {
         db.close();
     }
 
-    protected void getNotDeleted(String table, GetItem getItem, String selection, String[] selectionArgs, String limit) {
+    protected void getNotDeleted(String table, GetItem getItem, String selection, String[] selectionArgs, String limit, String orderBy) {
         String notDeleted = "NOT " + DbHandler.Tables.Base.isDeleted;
-        get(table, getItem, selection == null ? notDeleted : selection + "AND " + notDeleted, selectionArgs, limit);
+        get(table, getItem, selection == null ? notDeleted : selection + "AND " + notDeleted, selectionArgs, limit, orderBy);
     }
 
-    protected void get(String table, GetItem getItem, String selection, String[] selectionArgs, String limit) {
+    protected void get(String table, GetItem getItem, String selection, String[] selectionArgs, String limit, String orderBy) {
         SQLiteDatabase db = dbHandler.getReadableDatabase();
-        Cursor cursor = db.query(true, table, null, selection, selectionArgs, null, null, DbHandler.Tables.Base.date + " DESC", limit);
+        Cursor cursor = db.query(true, table, null, selection, selectionArgs, null, null, orderBy == null ? DbHandler.Tables.Base.date + " DESC" : orderBy, limit);
 
         if (!cursor.moveToFirst()) {
             cursor.close();

@@ -1,56 +1,25 @@
 package com.sh4dov.carcosts.controllers;
 
-
-import android.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 
 import com.sh4dov.carcosts.R;
 import com.sh4dov.carcosts.model.Fuel;
-import com.sh4dov.carcosts.repositories.FuelRepository;
-import com.sh4dov.common.ListenerList;
 import com.sh4dov.common.ViewHelper;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Calendar;
 
-public class AddRefuelingFragment extends Fragment {
-    private FuelRepository fuelRepository;
-    private ListenerList<AddedListener> addedListeners = new ListenerList<AddedListener>();
+public class FuelViewOperator {
+    private ViewHelper viewHelper;
 
-    public interface AddedListener{
-        void added();
+    public FuelViewOperator(ViewHelper viewHelper) {
+        this.viewHelper = viewHelper;
     }
 
-    public void addAddedListener(AddedListener listener) {addedListeners.add(listener);}
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_add_refueling, container, false);
-        ViewHelper viewHelper = new ViewHelper(view);
-        Button button = viewHelper.get(R.id.addButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                add();
-            }
-        });
-        return view;
-    }
-
-    @Override
-    public void onStart() {
-        Fuel fuel = fuelRepository.getLastFuel();
-
-        ViewHelper viewHelper = new ViewHelper(getView());
+    public void set(Fuel fuel) {
         NumberPicker.Formatter formatter = new NumberPicker.Formatter() {
             @Override
             public String format(int i) {
@@ -65,20 +34,13 @@ public class AddRefuelingFragment extends Fragment {
         setOneDigitNumbers(viewHelper, fuel.averageFuel, R.id.averageFuel1, R.id.averageFuel2, 100);
         setOneDigitNumbers(viewHelper, fuel.distance, R.id.distance1, R.id.distance2, 9999);
         setFuelType(viewHelper, fuel.fuelType);
-
-        super.onStart();
     }
 
-    public void setFuelRepository(FuelRepository fuelRepository) {
-        this.fuelRepository = fuelRepository;
-    }
+    public Fuel get(Fuel instance) {
+        Fuel fuel = instance != null ? instance : new Fuel();
 
-    private void add() {
-        Fuel fuel = new Fuel();
-        ViewHelper viewHelper = new ViewHelper(getView());
-
-        DatePicker date = viewHelper.get(R.id.datePicker);
         Calendar calendar = Calendar.getInstance();
+        DatePicker date = viewHelper.get(R.id.datePicker);
         calendar.set(date.getYear(), date.getMonth(), date.getDayOfMonth());
         fuel.date = calendar.getTime();
 
@@ -93,21 +55,7 @@ public class AddRefuelingFragment extends Fragment {
         EditText fuelType = viewHelper.get(R.id.fuelType);
         fuel.fuelType = fuelType.getText().toString();
 
-        if(fuel.isValid()){
-            fuelRepository.add(fuel);
-            addedListeners.fireEvent(new ListenerList.FireHandler<AddedListener>() {
-                @Override
-                public void fireEvent(AddedListener listener) {
-                    listener.added();
-                }
-            });
-        }
-    }
-
-    private double getNumber(ViewHelper viewHelper, int idPart1, int idPart2, int divider){
-        NumberPicker part1 = viewHelper.get(idPart1);
-        NumberPicker part2 = viewHelper.get(idPart2);
-        return part1.getValue() + ((double)part2.getValue() / divider);
+        return fuel;
     }
 
     private void setFuelType(ViewHelper viewHelper, String fuelType) {
@@ -149,7 +97,7 @@ public class AddRefuelingFragment extends Fragment {
 
         NumberPicker numberPicker = viewHelper.get(R.id.mileage);
         numberPicker.setMinValue(min);
-        numberPicker.setMaxValue(1000000);
+        numberPicker.setMaxValue(Fuel.MAX_MILEAGE);
         numberPicker.setValue(value);
         numberPicker.setFormatter(new NumberPicker.Formatter() {
             @Override
@@ -158,5 +106,10 @@ public class AddRefuelingFragment extends Fragment {
             }
         });
     }
-}
 
+    private double getNumber(ViewHelper viewHelper, int idPart1, int idPart2, int divider) {
+        NumberPicker part1 = viewHelper.get(idPart1);
+        NumberPicker part2 = viewHelper.get(idPart2);
+        return part1.getValue() + ((double) part2.getValue() / divider);
+    }
+}

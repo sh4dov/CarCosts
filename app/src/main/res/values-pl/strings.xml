@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Car costs</string>
+    <string name="action_settings">Opcje</string>
+    <string name="add">Dodaj</string>
+    <string name="added_fuel">Dodano tankowanie</string>
+    <string name="average_fuel">Średnie spalanie</string>
+    <string name="cost">Koszt</string>
+    <string name="date">Data</string>
+    <string name="delete">Usuń</string>
+    <string name="deleted_fuel">Tankowanie usunięte</string>
+    <string name="distance">Odległość</string>
+    <string name="fuel_type">Typ paliwa</string>
+    <string name="liter_cost">Koszt litra</string>
+    <string name="liters">Litry</string>
+    <string name="mileage">Przebieg</string>
+    <string name="save">Zapisz</string>
+    <string name="title_activity_edit_fuel">Edytuj tankowanie</string>
+    <string name="updated_fuel">Tankowanie zaktualizowane</string>
+</resources>

@@ -1,6 +1,7 @@
 package com.sh4dov.carcosts.controllers;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -10,8 +11,9 @@ import com.sh4dov.carcosts.R;
 import com.sh4dov.carcosts.infrastructure.FragmentFactory;
 import com.sh4dov.carcosts.infrastructure.FragmentOperator;
 import com.sh4dov.carcosts.infrastructure.SectionsPagerAdapter;
+import com.sh4dov.carcosts.model.Fuel;
 
-public class MainActivity extends Activity implements FragmentOperator {
+public class MainActivity extends Activity implements FragmentOperator, FuelListFragment.EditFuelListener {
     private ViewPager viewPager;
     private SectionsPagerAdapter pagerAdapter;
 
@@ -30,7 +32,7 @@ public class MainActivity extends Activity implements FragmentOperator {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_overview, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -57,5 +59,25 @@ public class MainActivity extends Activity implements FragmentOperator {
     @Override
     public void reload() {
         pagerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void edit(Fuel fuel) {
+        Intent intent = new Intent(this, EditFuelActivity.class);
+        intent.putExtra(EditFuelActivity.EditFuelKey, fuel);
+        startActivityForResult(intent, RequestCodes.EditFuel);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case RequestCodes.EditFuel:
+                reload();
+                break;
+        }
+    }
+
+    private static class RequestCodes {
+        public static final int EditFuel = 1;
     }
 }

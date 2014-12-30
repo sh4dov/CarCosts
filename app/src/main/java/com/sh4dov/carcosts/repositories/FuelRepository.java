@@ -60,9 +60,44 @@ public class FuelRepository extends BaseRepository {
                 },
                 null,
                 null,
+                null,
                 null);
 
         return result;
+    }
+
+    public Fuel getPrevious(Fuel fuel) {
+        final Fuel[] result = new Fuel[1];
+        int mileage = fuel == null ? 0 : fuel.mileage;
+        GetItem getItem = new GetItem() {
+            @Override
+            public void nextItem(Cursor cursor) {
+                result[0] = getFuel(cursor);
+            }
+
+            @Override
+            public void initial(Cursor cursor) {
+            }
+        };
+        getNotDeleted(DbHandler.Tables.fuel, getItem, DbHandler.Tables.Fuel.mileage + " < ?", new String[]{Integer.toString(mileage)}, "1", DbHandler.Tables.Fuel.mileage + " DESC");
+        return result[0] != null ? result[0] : new Fuel();
+    }
+
+    public Fuel getNext(Fuel fuel){
+        final Fuel[] result = new Fuel[1];
+        int mileage = fuel == null ? Fuel.MAX_MILEAGE : fuel.mileage;
+        GetItem getItem = new GetItem() {
+            @Override
+            public void nextItem(Cursor cursor) {
+                result[0] = getFuel(cursor);
+            }
+
+            @Override
+            public void initial(Cursor cursor) {
+            }
+        };
+        getNotDeleted(DbHandler.Tables.fuel, getItem, DbHandler.Tables.Fuel.mileage + " > ?", new String[]{Integer.toString(mileage)}, "1", DbHandler.Tables.Fuel.mileage + " DESC");
+        return result[0] != null ? result[0] : new Fuel();
     }
 
     public Fuel getLastFuel() {
@@ -78,7 +113,7 @@ public class FuelRepository extends BaseRepository {
             }
         };
 
-        getNotDeleted(DbHandler.Tables.fuel, getItem, null, null, "1");
+        getNotDeleted(DbHandler.Tables.fuel, getItem, null, null, "1", null);
         return fuel[0] != null ? fuel[0] : new Fuel();
     }
 

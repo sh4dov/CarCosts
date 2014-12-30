@@ -4,7 +4,8 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.sh4dov.carcosts.controllers.AddRefuelingFragment;
+import com.sh4dov.carcosts.controllers.AddFuelFragment;
+import com.sh4dov.carcosts.controllers.FuelListFragment;
 import com.sh4dov.carcosts.controllers.OverviewFragment;
 import com.sh4dov.carcosts.repositories.DbHandler;
 import com.sh4dov.carcosts.repositories.FuelRepository;
@@ -17,7 +18,8 @@ public class FragmentFactory {
     private final FuelRepository fuelRepository;
     private int[] positions = new int[]{
             FragmentPosition.Overview,
-            FragmentPosition.AddRefueling
+            FragmentPosition.AddRefueling,
+            FragmentPosition.RefuelingList
     };
     private FragmentOperator fragmentOperator;
 
@@ -38,17 +40,23 @@ public class FragmentFactory {
                 return overviewFragment;
 
             case FragmentPosition.AddRefueling:
-                AddRefuelingFragment addRefuelingFragment = new AddRefuelingFragment();
+                AddFuelFragment addRefuelingFragment = new AddFuelFragment();
                 addRefuelingFragment.setFuelRepository(fuelRepository);
-                addRefuelingFragment.addAddedListener(new AddRefuelingFragment.AddedListener() {
+                addRefuelingFragment.addAddedListener(new AddFuelFragment.AddedListener() {
                     @Override
                     public void added() {
                         fragmentOperator.reload();
-                        fragmentOperator.goToFragment(FragmentPosition.Overview);
+                        fragmentOperator.goToFragment(FragmentPosition.RefuelingList);
                     }
                 });
                 addRefuelingFragment.setArguments(args);
                 return addRefuelingFragment;
+
+            case FragmentPosition.RefuelingList:
+                FuelListFragment fuelListFragment = new FuelListFragment();
+                fuelListFragment.setFuelRepository(fuelRepository);
+                fuelListFragment.setArguments(args);
+                return fuelListFragment;
         }
 
     }
@@ -60,5 +68,6 @@ public class FragmentFactory {
     public static class FragmentPosition {
         public static final int Overview = 0;
         public static final int AddRefueling = 1;
+        public static final int RefuelingList = 2;
     }
 }

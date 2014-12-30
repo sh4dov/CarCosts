@@ -16,6 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".controllers.EditFuelActivity"
+            android:label="@string/title_activity_edit_fuel" android:parentActivityName=".controllers.MainActivity" >
+        </activity>
     </application>
 
 </manifest>

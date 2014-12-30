@@ -15,5 +15,8 @@
     <string name="distance">Distance</string>
     <string name="fuel_type">Fuel type</string>
     <string name="add">Add</string>
+    <string name="title_activity_edit_fuel">Edit refueling</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
 
 </resources>

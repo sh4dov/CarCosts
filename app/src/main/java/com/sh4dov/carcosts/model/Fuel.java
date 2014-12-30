@@ -4,6 +4,8 @@ package com.sh4dov.carcosts.model;
  * Created by sh4dov on 2014-12-26.
  */
 public class Fuel extends ModelBase {
+    public final  static int MAX_MILEAGE = 1000000;
+
     public int mileage;
     public double liters;
     public double cost;

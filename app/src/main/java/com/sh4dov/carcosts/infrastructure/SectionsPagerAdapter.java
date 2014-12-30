@@ -26,4 +26,11 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return fragmentFactory.getCount();
     }
+
+    @Override
+    public int getItemPosition(Object object) {
+        // Causes adapter to reload all Fragments when
+        // notifyDataSetChanged is called
+        return POSITION_NONE;
+    }
 }
