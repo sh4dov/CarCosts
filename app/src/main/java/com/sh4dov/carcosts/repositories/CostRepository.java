@@ -25,6 +25,19 @@ public class CostRepository extends BaseRepository {
         getNotificator().showInfo(R.string.added_cost);
     }
 
+    public void update(Cost cost) {
+        ContentValues values = getContentValues(cost);
+        update(DbHandler.Tables.costs, values, cost);
+        getNotificator().showInfo(R.id.updated_cost);
+    }
+
+    public void delete(Cost cost) {
+        cost.isDeleted = true;
+        ContentValues values = createContentValues(cost);
+        update(DbHandler.Tables.costs, values, cost);
+        getNotificator().showInfo(R.id.deleted_cost);
+    }
+
     private ContentValues getContentValues(Cost cost) {
         ContentValues values = createContentValues(cost);
         values.put(DbHandler.Tables.Costs.cost, cost.cost);

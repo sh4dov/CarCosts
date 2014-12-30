@@ -34,7 +34,7 @@ public class FuelRepository extends BaseRepository {
 
     public void delete(Fuel fuel) {
         fuel.isDeleted = true;
-        ContentValues values = getContentValues(fuel);
+        ContentValues values = createContentValues(fuel);
         update(DbHandler.Tables.fuel, values, fuel);
         getNotificator().showInfo(R.string.deleted_fuel);
     }

@@ -30,8 +30,7 @@ public class EditFuelActivity extends Activity {
         fuelRepository = new FuelRepository(new DbHandler(this), new ToastNotificator(this));
         final ViewHelper viewHelper = new ViewHelper(this);
 
-        Button saveButton = viewHelper.get(R.id.save_button);
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        viewHelper.get(R.id.save_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fuel updated = new FuelViewOperator(viewHelper).get(fuel);
@@ -43,8 +42,7 @@ public class EditFuelActivity extends Activity {
             }
         });
 
-        Button deleteButton = viewHelper.get(R.id.delete_button);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
+        viewHelper.get(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fuelRepository.delete(fuel);
@@ -63,10 +61,7 @@ public class EditFuelActivity extends Activity {
         ViewHelper viewHelper = new ViewHelper(this);
         new FuelViewOperator(viewHelper).set(fuel);
 
-        DatePicker date = viewHelper.get(R.id.datePicker);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(fuel.date);
-        date.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        viewHelper.setDate(R.id.datePicker, fuel.date);
 
         NumberPicker mileage = viewHelper.get(R.id.mileage);
         mileage.setMinValue(previous.mileage);

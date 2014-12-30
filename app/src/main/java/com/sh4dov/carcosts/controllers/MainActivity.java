@@ -71,13 +71,16 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
 
     @Override
     public void edit(Cost cost) {
-
+        Intent intent = new Intent(this, EditCostActivity.class);
+        intent.putExtra(EditCostActivity.EditCostKey, cost);
+        startActivityForResult(intent, RequestCodes.EditCost);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case RequestCodes.EditFuel:
+            case RequestCodes.EditCost:
                 reload();
                 break;
         }
@@ -85,5 +88,6 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
 
     private static class RequestCodes {
         public static final int EditFuel = 1;
+        public static final int EditCost = 2;
     }
 }
