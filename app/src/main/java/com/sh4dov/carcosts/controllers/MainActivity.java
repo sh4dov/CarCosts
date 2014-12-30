@@ -13,8 +13,9 @@ import com.sh4dov.carcosts.infrastructure.FragmentOperator;
 import com.sh4dov.carcosts.infrastructure.SectionsPagerAdapter;
 import com.sh4dov.carcosts.model.Cost;
 import com.sh4dov.carcosts.model.Fuel;
+import com.sh4dov.carcosts.model.Oil;
 
-public class MainActivity extends Activity implements FragmentOperator, FuelListFragment.EditFuelListener, CostListFragment.EditCostListener {
+public class MainActivity extends Activity implements FragmentOperator, FuelListFragment.EditFuelListener, CostListFragment.EditCostListener, OilListFragment.EditOilListener {
     private ViewPager viewPager;
     private SectionsPagerAdapter pagerAdapter;
 
@@ -27,7 +28,7 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
 
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
-        viewPager.setCurrentItem(FragmentFactory.FragmentPosition.AddCost);
+        viewPager.setCurrentItem(FragmentFactory.FragmentPosition.AddOil);
     }
 
     @Override
@@ -77,10 +78,18 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
     }
 
     @Override
+    public void edit(Oil oil) {
+        Intent intent = new Intent(this, EditOilActivity.class);
+        intent.putExtra(EditOilActivity.EditOilKey, oil);
+        startActivityForResult(intent, RequestCodes.EditCost);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case RequestCodes.EditFuel:
             case RequestCodes.EditCost:
+            case RequestCodes.EditOil:
                 reload();
                 break;
         }
@@ -89,5 +98,6 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
     private static class RequestCodes {
         public static final int EditFuel = 1;
         public static final int EditCost = 2;
+        public static final int EditOil = 3;
     }
 }

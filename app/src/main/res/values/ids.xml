@@ -2,4 +2,6 @@
 <resources>
     <item name="updated_cost" type="id">Updated cost</item>
     <item name="deleted_cost" type="id">Deleted cost</item>
+    <item name="updated_oil" type="id">Updated oil</item>
+    <item name="deleted_oil" type="id">Deleted oil</item>
 </resources>

@@ -23,5 +23,7 @@
     <string name="added_cost">Added cost</string>
     <string name="title_activity_edit_cost">Edit cost</string>
     <string name="hello_world">Hello world!</string>
+    <string name="added_oil">Added oil</string>
+    <string name="title_activity_edit_oil">Edit oil</string>
 
 </resources>

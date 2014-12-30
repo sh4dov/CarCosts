@@ -50,5 +50,10 @@ public class DbHandler extends SQLiteOpenHelper {
             public static final String cost = "Cost";
             public static final String comment = "Comment";
         }
+
+        public static class Oil extends Base {
+            public static final String liters = "Liters";
+            public static final String comment = "Comment";
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.sh4dov.carcosts.controllers.view.operators;
 
 import com.sh4dov.carcosts.R;
 import com.sh4dov.carcosts.model.Cost;
+import com.sh4dov.carcosts.model.Oil;
 import com.sh4dov.common.ViewHelper;
 import com.sh4dov.common.ViewOperator;
 
@@ -31,3 +32,4 @@ public class CostViewOperator extends ViewOperator<Cost> {
         setText(cost.comment, R.id.comment);
     }
 }
+

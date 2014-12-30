@@ -6,12 +6,15 @@ import android.os.Bundle;
 
 import com.sh4dov.carcosts.controllers.AddCostFragment;
 import com.sh4dov.carcosts.controllers.AddFuelFragment;
+import com.sh4dov.carcosts.controllers.AddOilFragment;
 import com.sh4dov.carcosts.controllers.CostListFragment;
 import com.sh4dov.carcosts.controllers.FuelListFragment;
+import com.sh4dov.carcosts.controllers.OilListFragment;
 import com.sh4dov.carcosts.controllers.OverviewFragment;
 import com.sh4dov.carcosts.repositories.CostRepository;
 import com.sh4dov.carcosts.repositories.DbHandler;
 import com.sh4dov.carcosts.repositories.FuelRepository;
+import com.sh4dov.carcosts.repositories.OilRepository;
 import com.sh4dov.common.Notificator;
 
 /**
@@ -20,12 +23,15 @@ import com.sh4dov.common.Notificator;
 public class FragmentFactory {
     private final FuelRepository fuelRepository;
     private final CostRepository costRepository;
+    private final OilRepository oilRepository;
     private int[] positions = new int[]{
             FragmentPosition.Overview,
             FragmentPosition.AddRefueling,
             FragmentPosition.RefuelingList,
             FragmentPosition.AddCost,
-            FragmentPosition.CostsList
+            FragmentPosition.CostsList,
+            FragmentPosition.AddOil,
+            FragmentPosition.OilList
     };
     private FragmentOperator fragmentOperator;
 
@@ -35,6 +41,7 @@ public class FragmentFactory {
         DbHandler dbHandler = new DbHandler(activity);
         fuelRepository = new FuelRepository(dbHandler, notificator);
         costRepository = new CostRepository(dbHandler, notificator);
+        oilRepository = new OilRepository(dbHandler, notificator);
     }
 
     public Fragment create(int position) {
@@ -82,6 +89,23 @@ public class FragmentFactory {
                 CostListFragment costListFragment = new CostListFragment();
                 costListFragment.setCostRepository(costRepository);
                 return costListFragment;
+
+            case FragmentPosition.AddOil:
+                AddOilFragment addOilFragment = new AddOilFragment();
+                addOilFragment.setOilRepository(oilRepository);
+                addOilFragment.addAddedListeners(new AddOilFragment.AddedListener() {
+                    @Override
+                    public void Added() {
+                        fragmentOperator.reload();
+                        fragmentOperator.goToFragment(FragmentPosition.OilList);
+                    }
+                });
+                return addOilFragment;
+
+            case FragmentPosition.OilList:
+                OilListFragment oilListFragment = new OilListFragment();
+                oilListFragment.setOilRepository(oilRepository);
+                return oilListFragment;
         }
 
     }
@@ -96,5 +120,7 @@ public class FragmentFactory {
         public static final int RefuelingList = 2;
         public static final int AddCost = 3;
         public static final int CostsList = 4;
+        public static final int AddOil = 5;
+        public static final int OilList = 6;
     }
 }

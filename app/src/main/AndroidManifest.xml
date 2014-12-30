@@ -24,6 +24,10 @@
             android:name=".controllers.EditCostActivity"
             android:label="@string/title_activity_edit_cost"
             android:parentActivityName=".controllers.MainActivity"></activity>
+        <activity
+            android:name=".controllers.EditOilActivity"
+            android:label="@string/title_activity_edit_oil"
+            android:parentActivityName=".controllers.MainActivity"></activity>
     </application>
 
 </manifest>
