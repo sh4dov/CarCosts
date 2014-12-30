@@ -103,8 +103,8 @@ public abstract class BaseRepository {
         return null;
     }
 
-    protected double getFloat(Cursor cursor, String column) {
-        return cursor.getFloat(cursor.getColumnIndex(column));
+    protected double getDouble(Cursor cursor, String column) {
+        return cursor.getDouble(cursor.getColumnIndex(column));
     }
 
     protected String getString(Cursor cursor, String column) {

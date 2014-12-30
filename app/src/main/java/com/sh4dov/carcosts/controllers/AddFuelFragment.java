@@ -7,19 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.NumberPicker;
 
 import com.sh4dov.carcosts.R;
+import com.sh4dov.carcosts.controllers.view.operators.FuelViewOperator;
 import com.sh4dov.carcosts.model.Fuel;
 import com.sh4dov.carcosts.repositories.FuelRepository;
 import com.sh4dov.common.ListenerList;
 import com.sh4dov.common.ViewHelper;
-
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Calendar;
 
 public class AddFuelFragment extends Fragment {
     private FuelRepository fuelRepository;
@@ -34,7 +28,7 @@ public class AddFuelFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_fuel, container, false);
         ViewHelper viewHelper = new ViewHelper(view);
-        Button button = viewHelper.get(R.id.addButton);
+        Button button = viewHelper.get(R.id.add_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

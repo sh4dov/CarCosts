@@ -1,12 +1,15 @@
 package com.sh4dov.carcosts.infrastructure;
 
+import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 
+import com.sh4dov.carcosts.controllers.AddCostFragment;
 import com.sh4dov.carcosts.controllers.AddFuelFragment;
+import com.sh4dov.carcosts.controllers.CostListFragment;
 import com.sh4dov.carcosts.controllers.FuelListFragment;
 import com.sh4dov.carcosts.controllers.OverviewFragment;
+import com.sh4dov.carcosts.repositories.CostRepository;
 import com.sh4dov.carcosts.repositories.DbHandler;
 import com.sh4dov.carcosts.repositories.FuelRepository;
 import com.sh4dov.common.Notificator;
@@ -16,17 +19,22 @@ import com.sh4dov.common.Notificator;
  */
 public class FragmentFactory {
     private final FuelRepository fuelRepository;
+    private final CostRepository costRepository;
     private int[] positions = new int[]{
             FragmentPosition.Overview,
             FragmentPosition.AddRefueling,
-            FragmentPosition.RefuelingList
+            FragmentPosition.RefuelingList,
+            FragmentPosition.AddCost,
+            FragmentPosition.CostsList
     };
     private FragmentOperator fragmentOperator;
 
-    public FragmentFactory(Context context, FragmentOperator fragmentOperator) {
+    public FragmentFactory(Activity activity, FragmentOperator fragmentOperator) {
         this.fragmentOperator = fragmentOperator;
-        Notificator notificator = new ToastNotificator(context);
-        fuelRepository = new FuelRepository(new DbHandler(context), notificator);
+        Notificator notificator = new ToastNotificator(activity);
+        DbHandler dbHandler = new DbHandler(activity);
+        fuelRepository = new FuelRepository(dbHandler, notificator);
+        costRepository = new CostRepository(dbHandler, notificator);
     }
 
     public Fragment create(int position) {
@@ -57,6 +65,23 @@ public class FragmentFactory {
                 fuelListFragment.setFuelRepository(fuelRepository);
                 fuelListFragment.setArguments(args);
                 return fuelListFragment;
+
+            case FragmentPosition.AddCost:
+                AddCostFragment addCostFragment = new AddCostFragment();
+                addCostFragment.setCostRepository(costRepository);
+                addCostFragment.addAddedListeners(new AddCostFragment.AddedListener() {
+                    @Override
+                    public void Added() {
+                        fragmentOperator.reload();
+                        fragmentOperator.goToFragment(FragmentPosition.CostsList);
+                    }
+                });
+                return addCostFragment;
+
+            case FragmentPosition.CostsList:
+                CostListFragment costListFragment = new CostListFragment();
+                costListFragment.setCostRepository(costRepository);
+                return costListFragment;
         }
 
     }
@@ -69,5 +94,7 @@ public class FragmentFactory {
         public static final int Overview = 0;
         public static final int AddRefueling = 1;
         public static final int RefuelingList = 2;
+        public static final int AddCost = 3;
+        public static final int CostsList = 4;
     }
 }

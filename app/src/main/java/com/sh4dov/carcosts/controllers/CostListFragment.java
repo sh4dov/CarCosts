@@ -8,11 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ListView;
 
 import com.sh4dov.carcosts.R;
-import com.sh4dov.carcosts.controllers.adapters.FuelsAdapter;
-import com.sh4dov.carcosts.model.Fuel;
-import com.sh4dov.carcosts.repositories.FuelRepository;
+import com.sh4dov.carcosts.controllers.adapters.CostAdapter;
+import com.sh4dov.carcosts.model.Cost;
+import com.sh4dov.carcosts.repositories.CostRepository;
 import com.sh4dov.common.ProgressIndicator;
 import com.sh4dov.common.ProgressPointerIndicator;
 import com.sh4dov.common.TaskScheduler;
@@ -20,18 +21,17 @@ import com.sh4dov.common.ViewHelper;
 
 import java.util.ArrayList;
 
+public class CostListFragment extends ListFragment {
 
-public class FuelListFragment extends ListFragment {
-    private ArrayList<Fuel> fuels = new ArrayList<Fuel>();
-    private FuelRepository fuelRepository;
-    private FuelsAdapter fuelsAdapter;
-    private EditFuelListener listener;
+    private EditCostListener listener;
+    private ArrayList<Cost> costs = new ArrayList<Cost>();
+    private CostRepository costRepository;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public FuelListFragment() {
+    public CostListFragment() {
     }
 
     @Override
@@ -41,30 +41,31 @@ public class FuelListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_fuel_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_cost_list, container, false);
 
-        final Activity activity = getActivity();
+        Activity activity = getActivity();
         final ProgressPointerIndicator progressPointer = new ProgressPointerIndicator();
+        final CostAdapter costAdapter = new CostAdapter(activity, costs);
         ProgressIndicator progressIndicator = new ProgressIndicator(activity, ProgressDialog.STYLE_HORIZONTAL, new TaskScheduler(activity)
                 .willExecute(new Runnable() {
                     @Override
                     public void run() {
-                        ArrayList<Fuel> refueling = fuelRepository.getRefueling(progressPointer);
-                        fuels.clear();
-                        fuels.addAll(refueling);
+                        ArrayList<Cost> result = costRepository.getCosts(progressPointer);
+                        costs.clear();
+                        costs.addAll(result);
                     }
                 })
                 .willExecuteOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        fuelsAdapter.notifyDataSetChanged();
+                        costAdapter.notifyDataSetChanged();
                     }
                 }));
+
         progressPointer.setProgressPointer(progressIndicator);
         progressIndicator.execute();
-        fuelsAdapter = new FuelsAdapter(activity, fuels);
         AbsListView listView = new ViewHelper(view).get(android.R.id.list);
-        listView.setAdapter(fuelsAdapter);
+        listView.setAdapter(costAdapter);
 
         return view;
     }
@@ -73,27 +74,30 @@ public class FuelListFragment extends ListFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            listener = (EditFuelListener) activity;
+            listener = (EditCostListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " + EditFuelListener.class.getName());
+            throw new ClassCastException(activity.toString()
+                    + " must implement " + EditCostListener.class.getName());
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        listener = null;
     }
 
-    public void setFuelRepository(FuelRepository fuelRepository) {
-        this.fuelRepository = fuelRepository;
+    public void setCostRepository(CostRepository costRepository) {
+        this.costRepository = costRepository;
     }
 
     @Override
-    public void onListItemClick(android.widget.ListView l, android.view.View v, final int position, long id) {
-        listener.edit(fuels.get(position));
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        listener.edit(costs.get(position));
     }
 
-    public interface EditFuelListener {
-        void edit(Fuel fuel);
+    public interface EditCostListener {
+        void edit(Cost cost);
     }
+
 }

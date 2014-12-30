@@ -1,4 +1,4 @@
-package com.sh4dov.carcosts.adapters;
+package com.sh4dov.carcosts.controllers.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -20,15 +20,15 @@ import java.util.ArrayList;
  * Created by sh4dov on 2014-12-29.
  */
 public class FuelsAdapter extends ArrayAdapter<Fuel> {
-    public FuelsAdapter(Context context, ArrayList<Fuel> fuels){
+    public FuelsAdapter(Context context, ArrayList<Fuel> fuels) {
         super(context, 0, fuels);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(int position, View convertView, ViewGroup parent) {
         Fuel fuel = getItem(position);
 
-        if(convertView == null){
+        if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_fuel_item, parent, false);
         }
 

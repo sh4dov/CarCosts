@@ -2,14 +2,13 @@ package com.sh4dov.carcosts.controllers;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.NumberPicker;
 
 import com.sh4dov.carcosts.R;
+import com.sh4dov.carcosts.controllers.view.operators.FuelViewOperator;
 import com.sh4dov.carcosts.infrastructure.ToastNotificator;
 import com.sh4dov.carcosts.model.Fuel;
 import com.sh4dov.carcosts.repositories.DbHandler;
@@ -36,7 +35,7 @@ public class EditFuelActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Fuel updated = new FuelViewOperator(viewHelper).get(fuel);
-                if(updated.isValid()){
+                if (updated.isValid()) {
                     fuelRepository.update(updated);
                     setResult(RESULT_OK);
                     finish();

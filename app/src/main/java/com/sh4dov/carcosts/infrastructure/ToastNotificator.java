@@ -1,6 +1,6 @@
 package com.sh4dov.carcosts.infrastructure;
 
-import android.content.Context;
+import android.app.Activity;
 import android.widget.Toast;
 
 import com.sh4dov.common.Notificator;
@@ -9,19 +9,29 @@ import com.sh4dov.common.Notificator;
  * Created by sh4dov on 2014-12-26.
  */
 public class ToastNotificator implements Notificator {
-    private Context context;
+    private Activity activity;
 
-    public ToastNotificator(Context context){
-        this.context = context;
+    public ToastNotificator(Activity activity) {
+        this.activity = activity;
     }
 
     @Override
-    public void showInfo(String message) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    public void showInfo(final String message) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
-    public void showInfo(int id) {
-        Toast.makeText(context, context.getText(id), Toast.LENGTH_LONG).show();
+    public void showInfo(final int id) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(activity, activity.getText(id), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

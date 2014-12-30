@@ -27,8 +27,8 @@ public class DbHandler extends SQLiteOpenHelper {
 
     public static class Tables {
         public static final String fuel = "Fuel";
-        public static final String Oil = "Oil";
-        public static final String Costs = "Costs";
+        public static final String oil = "Oil";
+        public static final String costs = "Costs";
 
         public static class Base {
             public static final String id = "Id";
@@ -44,6 +44,11 @@ public class DbHandler extends SQLiteOpenHelper {
             public static final String averageFuel = "AverageFuel";
             public static final String distance = "Distance";
             public static final String fuelType = "FuelType";
+        }
+
+        public static class Costs extends Base {
+            public static final String cost = "Cost";
+            public static final String comment = "Comment";
         }
     }
 }

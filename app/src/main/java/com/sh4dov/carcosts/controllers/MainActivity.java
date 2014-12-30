@@ -11,9 +11,10 @@ import com.sh4dov.carcosts.R;
 import com.sh4dov.carcosts.infrastructure.FragmentFactory;
 import com.sh4dov.carcosts.infrastructure.FragmentOperator;
 import com.sh4dov.carcosts.infrastructure.SectionsPagerAdapter;
+import com.sh4dov.carcosts.model.Cost;
 import com.sh4dov.carcosts.model.Fuel;
 
-public class MainActivity extends Activity implements FragmentOperator, FuelListFragment.EditFuelListener {
+public class MainActivity extends Activity implements FragmentOperator, FuelListFragment.EditFuelListener, CostListFragment.EditCostListener {
     private ViewPager viewPager;
     private SectionsPagerAdapter pagerAdapter;
 
@@ -26,7 +27,7 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
 
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
-        viewPager.setCurrentItem(FragmentFactory.FragmentPosition.AddRefueling);
+        viewPager.setCurrentItem(FragmentFactory.FragmentPosition.AddCost);
     }
 
     @Override
@@ -66,6 +67,11 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
         Intent intent = new Intent(this, EditFuelActivity.class);
         intent.putExtra(EditFuelActivity.EditFuelKey, fuel);
         startActivityForResult(intent, RequestCodes.EditFuel);
+    }
+
+    @Override
+    public void edit(Cost cost) {
+
     }
 
     @Override

@@ -83,7 +83,7 @@ public class FuelRepository extends BaseRepository {
         return result[0] != null ? result[0] : new Fuel();
     }
 
-    public Fuel getNext(Fuel fuel){
+    public Fuel getNext(Fuel fuel) {
         final Fuel[] result = new Fuel[1];
         int mileage = fuel == null ? Fuel.MAX_MILEAGE : fuel.mileage;
         GetItem getItem = new GetItem() {
@@ -136,15 +136,15 @@ public class FuelRepository extends BaseRepository {
             } else if (column.equals(DbHandler.Tables.Fuel.mileage)) {
                 fuel.mileage = getInt(cursor, column);
             } else if (column.equals(DbHandler.Tables.Fuel.liters)) {
-                fuel.liters = getFloat(cursor, column);
+                fuel.liters = getDouble(cursor, column);
             } else if (column.equals(DbHandler.Tables.Fuel.cost)) {
-                fuel.cost = getFloat(cursor, column);
+                fuel.cost = getDouble(cursor, column);
             } else if (column.equals(DbHandler.Tables.Fuel.literCost)) {
-                fuel.literCost = getFloat(cursor, column);
+                fuel.literCost = getDouble(cursor, column);
             } else if (column.equals(DbHandler.Tables.Fuel.averageFuel)) {
-                fuel.averageFuel = getFloat(cursor, column);
+                fuel.averageFuel = getDouble(cursor, column);
             } else if (column.equals(DbHandler.Tables.Fuel.distance)) {
-                fuel.distance = getFloat(cursor, column);
+                fuel.distance = getDouble(cursor, column);
             } else if (column.equals(DbHandler.Tables.Fuel.fuelType)) {
                 fuel.fuelType = getString(cursor, column);
             }

@@ -2,6 +2,12 @@ package com.sh4dov.common;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class ViewHelper{
     private FindView findView;
@@ -16,6 +22,23 @@ public class ViewHelper{
 
     public <T extends View> T get(int id){
         return (T) findView.findViewById(id);
+    }
+
+    public Date getDate(int id){
+        DatePicker date = get(id);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(date.getYear(), date.getMonth(), date.getDayOfMonth());
+        return calendar.getTime();
+    }
+
+    public String getText(int id){
+        EditText editText = get(id);
+        return editText.getText().toString();
+    }
+
+    public void setText(int id, String text){
+        TextView textView = get(id);
+        textView.setText(text);
     }
 
     private interface FindView{
