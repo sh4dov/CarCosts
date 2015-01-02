@@ -34,7 +34,7 @@ public class CostAdapter extends ArrayAdapter<Cost> {
         ViewHelper viewHelper = new ViewHelper(convertView);
         DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols();
         formatSymbols.setGroupingSeparator(' ');
-        DecimalFormat decimalFormat = new DecimalFormat("###,###.##", formatSymbols);
+        DecimalFormat decimalFormat = new DecimalFormat("###,###.00", formatSymbols);
 
         viewHelper.setText(R.id.date, new SimpleDateFormat("yyyy-MM-dd HH:mm").format(cost.date));
         viewHelper.setText(R.id.cost, decimalFormat.format(cost.cost));

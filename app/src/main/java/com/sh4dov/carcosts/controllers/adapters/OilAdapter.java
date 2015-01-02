@@ -34,7 +34,7 @@ public class OilAdapter extends ArrayAdapter<Oil> {
         ViewHelper viewHelper = new ViewHelper(convertView);
         DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols();
         formatSymbols.setGroupingSeparator(' ');
-        DecimalFormat decimalFormat = new DecimalFormat("###,###.##", formatSymbols);
+        DecimalFormat decimalFormat = new DecimalFormat("###,##0.00", formatSymbols);
 
         viewHelper.setText(R.id.date, new SimpleDateFormat("yyyy-MM-dd HH:mm").format(oil.date));
         viewHelper.setText(R.id.liters, decimalFormat.format(oil.liters));

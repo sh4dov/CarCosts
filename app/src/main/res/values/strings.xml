@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Car costs</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Settings ...</string>
     <string name="added_fuel">Added refueling</string>
     <string name="deleted_fuel">Deleted refueling</string>
     <string name="updated_fuel">Updated refueling</string>
@@ -25,5 +25,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="added_oil">Added oil</string>
     <string name="title_activity_edit_oil">Edit oil</string>
+    <string name="path">Path:</string>
+    <string name="file_name">File name:</string>
+    <string name="action_import_costs">Import costs</string>
+    <string name="action_import_oil">Import oil</string>
+    <string name="action_import_refueling">Import refueling</string>
 
 </resources>

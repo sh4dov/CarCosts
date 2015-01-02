@@ -25,6 +25,14 @@ public class DbHandler extends SQLiteOpenHelper {
 
     }
 
+    public void clear(String table){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("DELETE FROM " + table);
+
+        db.close();
+    }
+
     public static class Tables {
         public static final String fuel = "Fuel";
         public static final String oil = "Oil";

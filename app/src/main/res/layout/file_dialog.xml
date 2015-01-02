@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/path"
+        android:id="@+id/textView25"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="/sss/ddd/www/qqq/qqq/asd/asd/sad/sds/sd/sd/sdd/sd/file.txt"
+        android:id="@+id/path"
+        android:ellipsize="start"
+        android:singleLine="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/textView25"
+        android:linksClickable="false"
+        android:paddingLeft="5dp" />
+    <View
+        android:layout_width="wrap_content"
+        android:background="@drawable/line"
+        android:layout_height="1dp"
+        android:layout_below="@+id/textView25"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/textView27"></View>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:id="@+id/file_list"
+        android:layout_below="@+id/textView27"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/listView2" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:background="@drawable/line"
+        android:layout_height="1dp"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/listView2"
+        android:layout_alignParentBottom="true"></View>
+
+</RelativeLayout>

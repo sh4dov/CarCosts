@@ -4,4 +4,6 @@
     <item name="deleted_cost" type="id">Deleted cost</item>
     <item name="updated_oil" type="id">Updated oil</item>
     <item name="deleted_oil" type="id">Deleted oil</item>
+    <item name="select" type="id">Select</item>
+    <item name="cancel" type="id">Cancel</item>
 </resources>
