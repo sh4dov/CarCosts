@@ -7,7 +7,7 @@ import com.sh4dov.common.Notificator;
 
 import java.io.File;
 
-public class OilImporter extends ImporterBase{
+public class OilImporter extends ImporterBase {
 
     public OilImporter(File file, DbHandler dbHandler, Notificator notificator) {
         super(file, dbHandler, notificator);
@@ -23,7 +23,7 @@ public class OilImporter extends ImporterBase{
         ContentValues cv = new ContentValues();
         cv.put(DbHandler.Tables.Oil.date, values[0]);
         cv.put(DbHandler.Tables.Oil.liters, values[1]);
-        if(values.length > 2) {
+        if (values.length > 2) {
             cv.put(DbHandler.Tables.Oil.comment, values[2]);
         }
         return cv;

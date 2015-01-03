@@ -38,7 +38,7 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        pagerAdapter = new SectionsPagerAdapter(getFragmentManager(), this, this);
+        pagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);

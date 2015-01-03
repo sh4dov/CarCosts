@@ -1,6 +1,7 @@
 package com.sh4dov.carcosts.controllers;
 
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,23 +11,25 @@ import android.widget.Button;
 
 import com.sh4dov.carcosts.R;
 import com.sh4dov.carcosts.controllers.view.operators.FuelViewOperator;
+import com.sh4dov.carcosts.infrastructure.FragmentFactory;
+import com.sh4dov.carcosts.infrastructure.FragmentOperator;
+import com.sh4dov.carcosts.infrastructure.ToastNotificator;
 import com.sh4dov.carcosts.model.Fuel;
+import com.sh4dov.carcosts.repositories.DbHandler;
 import com.sh4dov.carcosts.repositories.FuelRepository;
-import com.sh4dov.common.ListenerList;
 import com.sh4dov.common.ViewHelper;
 
 public class AddFuelFragment extends Fragment {
     private FuelRepository fuelRepository;
-    private ListenerList<AddedListener> addedListeners = new ListenerList<AddedListener>();
-
-    public void addAddedListener(AddedListener listener) {
-        addedListeners.add(listener);
-    }
+    private FragmentOperator fragmentOperator;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_fuel, container, false);
+
+        Activity activity = getActivity();
+        fuelRepository = new FuelRepository(new DbHandler(activity), new ToastNotificator(activity));
         ViewHelper viewHelper = new ViewHelper(view);
         Button button = viewHelper.get(R.id.add_button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -39,6 +42,22 @@ public class AddFuelFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            fragmentOperator = (FragmentOperator) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement " + FragmentOperator.class.getName());
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        fragmentOperator = null;
+    }
+
+    @Override
     public void onStart() {
         Fuel fuel = fuelRepository.getLastFuel();
 
@@ -47,27 +66,14 @@ public class AddFuelFragment extends Fragment {
         super.onStart();
     }
 
-
-    public void setFuelRepository(FuelRepository fuelRepository) {
-        this.fuelRepository = fuelRepository;
-    }
-
     private void add() {
         Fuel fuel = new FuelViewOperator(new ViewHelper(getView())).get(null);
 
         if (fuel.isValid()) {
             fuelRepository.add(fuel);
-            addedListeners.fireEvent(new ListenerList.FireHandler<AddedListener>() {
-                @Override
-                public void fireEvent(AddedListener listener) {
-                    listener.added();
-                }
-            });
+            fragmentOperator.goToFragment(FragmentFactory.FragmentPosition.RefuelingList);
+            fragmentOperator.reload();
         }
-    }
-
-    public interface AddedListener {
-        void added();
     }
 }
 

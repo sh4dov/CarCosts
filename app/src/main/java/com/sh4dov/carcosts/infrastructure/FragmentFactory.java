@@ -1,8 +1,6 @@
 package com.sh4dov.carcosts.infrastructure;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.os.Bundle;
 
 import com.sh4dov.carcosts.controllers.AddCostFragment;
 import com.sh4dov.carcosts.controllers.AddFuelFragment;
@@ -11,19 +9,8 @@ import com.sh4dov.carcosts.controllers.CostListFragment;
 import com.sh4dov.carcosts.controllers.FuelListFragment;
 import com.sh4dov.carcosts.controllers.OilListFragment;
 import com.sh4dov.carcosts.controllers.OverviewFragment;
-import com.sh4dov.carcosts.repositories.CostRepository;
-import com.sh4dov.carcosts.repositories.DbHandler;
-import com.sh4dov.carcosts.repositories.FuelRepository;
-import com.sh4dov.carcosts.repositories.OilRepository;
-import com.sh4dov.common.Notificator;
 
-/**
- * Created by sh4dov on 2014-12-25.
- */
 public class FragmentFactory {
-    private final FuelRepository fuelRepository;
-    private final CostRepository costRepository;
-    private final OilRepository oilRepository;
     private int[] positions = new int[]{
             FragmentPosition.Overview,
             FragmentPosition.AddRefueling,
@@ -33,79 +20,33 @@ public class FragmentFactory {
             FragmentPosition.AddOil,
             FragmentPosition.OilList
     };
-    private FragmentOperator fragmentOperator;
 
-    public FragmentFactory(Activity activity, FragmentOperator fragmentOperator) {
-        this.fragmentOperator = fragmentOperator;
-        Notificator notificator = new ToastNotificator(activity);
-        DbHandler dbHandler = new DbHandler(activity);
-        fuelRepository = new FuelRepository(dbHandler, notificator);
-        costRepository = new CostRepository(dbHandler, notificator);
-        oilRepository = new OilRepository(dbHandler, notificator);
+    public FragmentFactory() {
     }
 
     public Fragment create(int position) {
-        Bundle args = new Bundle();
-
         switch (position) {
             case FragmentPosition.Overview:
             default:
-                OverviewFragment overviewFragment = new OverviewFragment();
-                overviewFragment.setArguments(args);
-                return overviewFragment;
+                return new OverviewFragment();
 
             case FragmentPosition.AddRefueling:
-                AddFuelFragment addRefuelingFragment = new AddFuelFragment();
-                addRefuelingFragment.setFuelRepository(fuelRepository);
-                addRefuelingFragment.addAddedListener(new AddFuelFragment.AddedListener() {
-                    @Override
-                    public void added() {
-                        fragmentOperator.reload();
-                        fragmentOperator.goToFragment(FragmentPosition.RefuelingList);
-                    }
-                });
-                addRefuelingFragment.setArguments(args);
-                return addRefuelingFragment;
+                return new AddFuelFragment();
 
             case FragmentPosition.RefuelingList:
-                FuelListFragment fuelListFragment = new FuelListFragment();
-                fuelListFragment.setFuelRepository(fuelRepository);
-                fuelListFragment.setArguments(args);
-                return fuelListFragment;
+                return new FuelListFragment();
 
             case FragmentPosition.AddCost:
-                AddCostFragment addCostFragment = new AddCostFragment();
-                addCostFragment.setCostRepository(costRepository);
-                addCostFragment.addAddedListeners(new AddCostFragment.AddedListener() {
-                    @Override
-                    public void Added() {
-                        fragmentOperator.reload();
-                        fragmentOperator.goToFragment(FragmentPosition.CostsList);
-                    }
-                });
-                return addCostFragment;
+                return new AddCostFragment();
 
             case FragmentPosition.CostsList:
-                CostListFragment costListFragment = new CostListFragment();
-                costListFragment.setCostRepository(costRepository);
-                return costListFragment;
+                return new CostListFragment();
 
             case FragmentPosition.AddOil:
-                AddOilFragment addOilFragment = new AddOilFragment();
-                addOilFragment.setOilRepository(oilRepository);
-                addOilFragment.addAddedListeners(new AddOilFragment.AddedListener() {
-                    @Override
-                    public void Added() {
-                        fragmentOperator.reload();
-                        fragmentOperator.goToFragment(FragmentPosition.OilList);
-                    }
-                });
-                return addOilFragment;
+                return new AddOilFragment();
 
             case FragmentPosition.OilList:
-                OilListFragment oilListFragment = new OilListFragment();
-                oilListFragment.setOilRepository(oilRepository);
-                return oilListFragment;
+                return new OilListFragment();
         }
 
     }

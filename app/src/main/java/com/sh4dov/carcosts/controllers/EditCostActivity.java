@@ -2,13 +2,10 @@ package com.sh4dov.carcosts.controllers;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.sh4dov.carcosts.R;
 import com.sh4dov.carcosts.controllers.view.operators.CostViewOperator;
-import com.sh4dov.carcosts.controllers.view.operators.FuelViewOperator;
 import com.sh4dov.carcosts.infrastructure.ToastNotificator;
 import com.sh4dov.carcosts.model.Cost;
 import com.sh4dov.carcosts.repositories.CostRepository;
@@ -32,7 +29,7 @@ public class EditCostActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Cost updated = new CostViewOperator(viewHelper).get(cost);
-                if(updated.isValid()){
+                if (updated.isValid()) {
                     costRepository.update(updated);
                     setResult(RESULT_OK);
                     finish();
@@ -51,7 +48,7 @@ public class EditCostActivity extends Activity {
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         cost = (Cost) getIntent().getSerializableExtra(EditCostKey);
         ViewHelper viewHelper = new ViewHelper(this);
         new CostViewOperator(viewHelper).set(cost);

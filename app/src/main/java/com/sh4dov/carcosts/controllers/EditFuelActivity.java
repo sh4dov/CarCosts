@@ -3,8 +3,6 @@ package com.sh4dov.carcosts.controllers;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.NumberPicker;
 
 import com.sh4dov.carcosts.R;
@@ -14,8 +12,6 @@ import com.sh4dov.carcosts.model.Fuel;
 import com.sh4dov.carcosts.repositories.DbHandler;
 import com.sh4dov.carcosts.repositories.FuelRepository;
 import com.sh4dov.common.ViewHelper;
-
-import java.util.Calendar;
 
 
 public class EditFuelActivity extends Activity {

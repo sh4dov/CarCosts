@@ -6,14 +6,11 @@ import android.database.Cursor;
 import com.sh4dov.carcosts.R;
 import com.sh4dov.carcosts.model.Cost;
 import com.sh4dov.common.Notificator;
-import com.sh4dov.common.ProgressPointerIndicator;
+import com.sh4dov.common.ProgressPointer;
 import com.sh4dov.common.ProgressPointerOperator;
 
 import java.util.ArrayList;
 
-/**
- * Created by sh4dov on 2014-12-30.
- */
 public class CostRepository extends BaseRepository {
     public CostRepository(DbHandler dbHandler, Notificator notificator) {
         super(dbHandler, notificator);
@@ -45,7 +42,7 @@ public class CostRepository extends BaseRepository {
         return values;
     }
 
-    public ArrayList<Cost> getCosts(ProgressPointerIndicator progressPointer) {
+    public ArrayList<Cost> getCosts(ProgressPointer progressPointer) {
         final ArrayList<Cost> result = new ArrayList<Cost>();
         final ProgressPointerOperator pointer = new ProgressPointerOperator(progressPointer);
 

@@ -7,7 +7,7 @@ import com.sh4dov.common.Notificator;
 
 import java.io.File;
 
-public class FuelImporter extends ImporterBase{
+public class FuelImporter extends ImporterBase {
     public FuelImporter(File file, DbHandler dbHandler, Notificator notificator) {
         super(file, dbHandler, notificator);
     }

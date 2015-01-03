@@ -1,11 +1,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".OverviewActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" android:showAsAction="never" >
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".OverviewActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings">
         <menu>
-            <item android:id="@+id/action_import_costs" android:title="@string/action_import_costs"/>
-            <item android:id="@+id/action_import_oil" android:title="@string/action_import_oil"/>
-            <item android:id="@+id/action_import_refueling" android:title="@string/action_import_refueling"/>
+            <item android:title="@string/action_import">
+                <menu>
+                    <item
+                        android:id="@+id/action_import_costs"
+                        android:title="@string/action_import_costs" />
+                    <item
+                        android:id="@+id/action_import_oil"
+                        android:title="@string/action_import_oil" />
+                    <item
+                        android:id="@+id/action_import_refueling"
+                        android:title="@string/action_import_refueling" />
+                </menu>
+            </item>
         </menu>
-        </item>
+    </item>
 </menu>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,9 @@ import android.widget.AbsListView;
 
 import com.sh4dov.carcosts.R;
 import com.sh4dov.carcosts.controllers.adapters.FuelsAdapter;
+import com.sh4dov.carcosts.infrastructure.ToastNotificator;
 import com.sh4dov.carcosts.model.Fuel;
+import com.sh4dov.carcosts.repositories.DbHandler;
 import com.sh4dov.carcosts.repositories.FuelRepository;
 import com.sh4dov.common.ProgressIndicator;
 import com.sh4dov.common.ProgressPointerIndicator;
@@ -23,7 +26,6 @@ import java.util.ArrayList;
 
 public class FuelListFragment extends ListFragment {
     private ArrayList<Fuel> fuels = new ArrayList<Fuel>();
-    private FuelRepository fuelRepository;
     private FuelsAdapter fuelsAdapter;
     private EditFuelListener listener;
 
@@ -40,11 +42,12 @@ public class FuelListFragment extends ListFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fuel_list, container, false);
 
         final Activity activity = getActivity();
         final ProgressPointerIndicator progressPointer = new ProgressPointerIndicator();
+        final FuelRepository fuelRepository = new FuelRepository(new DbHandler(activity), new ToastNotificator(activity));
         ProgressIndicator progressIndicator = new ProgressIndicator(activity, ProgressDialog.STYLE_HORIZONTAL, new TaskScheduler(activity)
                 .willExecute(new Runnable() {
                     @Override
@@ -82,10 +85,7 @@ public class FuelListFragment extends ListFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-    }
-
-    public void setFuelRepository(FuelRepository fuelRepository) {
-        this.fuelRepository = fuelRepository;
+        listener = null;
     }
 
     @Override

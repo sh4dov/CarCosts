@@ -30,5 +30,9 @@
     <string name="action_import_costs">Import costs</string>
     <string name="action_import_oil">Import oil</string>
     <string name="action_import_refueling">Import refueling</string>
+    <string name="costs">Costs</string>
+    <string name="fuel">Fuel</string>
+    <string name="other">Other</string>
+    <string name="action_import">Import ...</string>
 
 </resources>

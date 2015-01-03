@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,10 @@ import android.widget.ListView;
 
 import com.sh4dov.carcosts.R;
 import com.sh4dov.carcosts.controllers.adapters.CostAdapter;
+import com.sh4dov.carcosts.infrastructure.ToastNotificator;
 import com.sh4dov.carcosts.model.Cost;
 import com.sh4dov.carcosts.repositories.CostRepository;
+import com.sh4dov.carcosts.repositories.DbHandler;
 import com.sh4dov.common.ProgressIndicator;
 import com.sh4dov.common.ProgressPointerIndicator;
 import com.sh4dov.common.TaskScheduler;
@@ -25,7 +28,6 @@ public class CostListFragment extends ListFragment {
 
     private EditCostListener listener;
     private ArrayList<Cost> costs = new ArrayList<Cost>();
-    private CostRepository costRepository;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -40,10 +42,11 @@ public class CostListFragment extends ListFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cost_list, container, false);
 
         Activity activity = getActivity();
+        final CostRepository costRepository = new CostRepository(new DbHandler(activity), new ToastNotificator(activity));
         final ProgressPointerIndicator progressPointer = new ProgressPointerIndicator();
         final CostAdapter costAdapter = new CostAdapter(activity, costs);
         ProgressIndicator progressIndicator = new ProgressIndicator(activity, ProgressDialog.STYLE_HORIZONTAL, new TaskScheduler(activity)
@@ -85,10 +88,6 @@ public class CostListFragment extends ListFragment {
     public void onDetach() {
         super.onDetach();
         listener = null;
-    }
-
-    public void setCostRepository(CostRepository costRepository) {
-        this.costRepository = costRepository;
     }
 
     @Override

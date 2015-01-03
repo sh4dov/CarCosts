@@ -5,12 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.sh4dov.carcosts.R;
-import com.sh4dov.carcosts.controllers.view.operators.CostViewOperator;
 import com.sh4dov.carcosts.controllers.view.operators.OilViewOperator;
 import com.sh4dov.carcosts.infrastructure.ToastNotificator;
-import com.sh4dov.carcosts.model.Cost;
 import com.sh4dov.carcosts.model.Oil;
-import com.sh4dov.carcosts.repositories.CostRepository;
 import com.sh4dov.carcosts.repositories.DbHandler;
 import com.sh4dov.carcosts.repositories.OilRepository;
 import com.sh4dov.common.ViewHelper;
@@ -32,7 +29,7 @@ public class EditOilActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Oil updated = new OilViewOperator(viewHelper).get(oil);
-                if(updated.isValid()){
+                if (updated.isValid()) {
                     oilRepository.update(updated);
                     setResult(RESULT_OK);
                     finish();
@@ -51,7 +48,7 @@ public class EditOilActivity extends Activity {
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         oil = (Oil) getIntent().getSerializableExtra(EditOilKey);
         ViewHelper viewHelper = new ViewHelper(this);
         new OilViewOperator(viewHelper).set(oil);

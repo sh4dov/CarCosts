@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +12,10 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 
 import com.sh4dov.carcosts.R;
-import com.sh4dov.carcosts.controllers.adapters.CostAdapter;
 import com.sh4dov.carcosts.controllers.adapters.OilAdapter;
-import com.sh4dov.carcosts.model.Cost;
+import com.sh4dov.carcosts.infrastructure.ToastNotificator;
 import com.sh4dov.carcosts.model.Oil;
-import com.sh4dov.carcosts.repositories.CostRepository;
+import com.sh4dov.carcosts.repositories.DbHandler;
 import com.sh4dov.carcosts.repositories.OilRepository;
 import com.sh4dov.common.ProgressIndicator;
 import com.sh4dov.common.ProgressPointerIndicator;
@@ -28,7 +28,6 @@ public class OilListFragment extends ListFragment {
 
     private EditOilListener listener;
     private ArrayList<Oil> oil = new ArrayList<Oil>();
-    private OilRepository oilRepository;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -43,10 +42,11 @@ public class OilListFragment extends ListFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_oil_list, container, false);
 
         Activity activity = getActivity();
+        final OilRepository oilRepository = new OilRepository(new DbHandler(activity), new ToastNotificator(activity));
         final ProgressPointerIndicator progressPointer = new ProgressPointerIndicator();
         final OilAdapter oilAdapter = new OilAdapter(activity, oil);
         ProgressIndicator progressIndicator = new ProgressIndicator(activity, ProgressDialog.STYLE_HORIZONTAL, new TaskScheduler(activity)
@@ -88,10 +88,6 @@ public class OilListFragment extends ListFragment {
     public void onDetach() {
         super.onDetach();
         listener = null;
-    }
-
-    public void setOilRepository(OilRepository oilRepository) {
-        this.oilRepository = oilRepository;
     }
 
     @Override
