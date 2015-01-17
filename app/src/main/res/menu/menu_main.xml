@@ -20,6 +20,16 @@
                         android:title="@string/action_import_refueling" />
                 </menu>
             </item>
+            <item android:title="@string/action_export">
+                <menu>
+                    <item android:title="@string/action_export_costs" android:id="@+id/action_export_costs"/>
+                    <item android:title="@string/action_export_oil" android:id="@+id/action_export_oil"/>
+                    <item android:title="@string/action_export_refueling" android:id="@+id/action_export_refueling"/>
+                </menu>
+            </item>
+
+            <item android:title="@string/action_backup" android:id="@+id/action_backup"/>
+            <item android:title="@string/action_restore" android:id="@+id/action_restore"/>
         </menu>
     </item>
 </menu>

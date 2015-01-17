@@ -16,9 +16,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * Created by sh4dov on 2014-12-31.
- */
 public abstract class ImporterBase {
     private DbHandler dbHandler;
     private File file;
@@ -66,6 +63,12 @@ public abstract class ImporterBase {
 
         dbHandler.clear(getTable());
         insert(getTable(), items, progressPointer);
+    }
+
+    protected void putIfCan(String column, String[] values, ContentValues contentValues, int valueSelector){
+        if(valueSelector < values.length){
+            contentValues.put(column, values[valueSelector]);
+        }
     }
 
     protected abstract String getTable();

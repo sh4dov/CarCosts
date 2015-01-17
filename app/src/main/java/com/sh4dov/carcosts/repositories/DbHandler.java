@@ -4,9 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by sh4dov on 2014-12-25.
- */
 public class DbHandler extends SQLiteOpenHelper {
 
     public DbHandler(Context context) {
@@ -25,7 +22,7 @@ public class DbHandler extends SQLiteOpenHelper {
 
     }
 
-    public void clear(String table){
+    public void clear(String table) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.execSQL("DELETE FROM " + table);

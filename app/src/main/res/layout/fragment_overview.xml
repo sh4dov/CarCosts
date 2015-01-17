@@ -9,11 +9,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Total"
+        android:id="@+id/title"
+        android:layout_alignRight="@+id/fuel_cost"
+        android:layout_alignParentLeft="true"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/costs"
         android:id="@+id/textView26"
-        android:layout_alignParentLeft="true"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/title"
         android:layout_alignParentRight="true"
-        android:gravity="center_horizontal" />
+        android:layout_alignParentLeft="true"
+        android:textStyle="italic" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -60,5 +72,90 @@
         android:id="@+id/other_cost"
         android:layout_alignBottom="@+id/textView31"
         android:layout_alignRight="@+id/total_cost" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/overview"
+        android:id="@+id/textView30"
+        android:layout_below="@+id/textView31"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/other_cost"
+        android:gravity="center_horizontal"
+        android:textStyle="italic" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/average_fuel_car"
+        android:id="@+id/textView32"
+        android:layout_below="@+id/textView30"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="5,4 l"
+        android:id="@+id/average_fuel_car"
+        android:layout_alignTop="@+id/textView32"
+        android:layout_alignParentRight="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/average_fuel_calculated"
+        android:id="@+id/textView33"
+        android:layout_below="@+id/textView32"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="5,9 l"
+        android:id="@+id/average_fuel_calculated"
+        android:layout_alignBottom="@+id/textView33"
+        android:layout_alignParentRight="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/added_oil"
+        android:id="@+id/textView34"
+        android:layout_below="@+id/textView33"
+        android:layout_alignParentLeft="true"
+        android:textStyle="italic" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="2,3 l"
+        android:id="@+id/oil"
+        android:layout_below="@+id/average_fuel_calculated"
+        android:layout_alignRight="@+id/fuel_cost" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/distance"
+        android:id="@+id/textView35"
+        android:layout_below="@+id/textView34"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="19 123 km"
+        android:id="@+id/distance"
+        android:layout_alignBottom="@+id/textView35"
+        android:layout_alignParentRight="true" />
 
 </RelativeLayout>

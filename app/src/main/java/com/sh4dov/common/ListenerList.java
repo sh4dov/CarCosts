@@ -6,10 +6,6 @@ import java.util.List;
 public class ListenerList<L> {
     private List<L> listenerList = new ArrayList<L>();
 
-    public interface FireHandler<L> {
-        void fireEvent(L listener);
-    }
-
     public void add(L listener) {
         listenerList.add(listener);
     }
@@ -27,5 +23,9 @@ public class ListenerList<L> {
 
     public List<L> getListenerList() {
         return listenerList;
+    }
+
+    public interface FireHandler<L> {
+        void fireEvent(L listener);
     }
 }

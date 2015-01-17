@@ -20,14 +20,15 @@ public class FuelImporter extends ImporterBase {
     @Override
     protected ContentValues createContentValues(String[] values) {
         ContentValues cv = new ContentValues();
-        cv.put(DbHandler.Tables.Fuel.date, values[0]);
-        cv.put(DbHandler.Tables.Fuel.mileage, values[1]);
-        cv.put(DbHandler.Tables.Fuel.cost, values[2]);
-        cv.put(DbHandler.Tables.Fuel.literCost, values[3]);
-        cv.put(DbHandler.Tables.Fuel.liters, values[4]);
-        cv.put(DbHandler.Tables.Fuel.averageFuel, values[5]);
-        cv.put(DbHandler.Tables.Fuel.distance, values[6]);
-        cv.put(DbHandler.Tables.Fuel.fuelType, values[7]);
+        putIfCan(DbHandler.Tables.Fuel.date, values, cv, 0);
+        putIfCan(DbHandler.Tables.Fuel.mileage, values, cv, 1);
+        putIfCan(DbHandler.Tables.Fuel.cost, values, cv, 2);
+        putIfCan(DbHandler.Tables.Fuel.literCost, values, cv, 3);
+        putIfCan(DbHandler.Tables.Fuel.liters, values, cv, 4);
+        putIfCan(DbHandler.Tables.Fuel.averageFuel, values, cv, 5);
+        putIfCan(DbHandler.Tables.Fuel.distance, values, cv, 6);
+        putIfCan(DbHandler.Tables.Fuel.fuelType, values, cv, 7);
+        putIfCan(DbHandler.Tables.Fuel.isDeleted, values, cv, 8);
         return cv;
     }
 }

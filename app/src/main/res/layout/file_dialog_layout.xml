@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<merge xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:showIn="@layout/file_dialog">
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,13 +24,14 @@
         android:layout_toRightOf="@+id/textView25"
         android:linksClickable="false"
         android:paddingLeft="5dp" />
+
     <View
         android:layout_width="wrap_content"
         android:background="@drawable/line"
         android:layout_height="1dp"
         android:layout_below="@+id/textView25"
         android:layout_alignParentLeft="true"
-        android:id="@+id/textView27"></View>
+        android:id="@+id/textView27"/>
 
     <ListView
         android:layout_width="wrap_content"
@@ -46,6 +47,5 @@
         android:layout_height="1dp"
         android:layout_alignParentLeft="true"
         android:id="@+id/listView2"
-        android:layout_alignParentBottom="true"></View>
-
-</RelativeLayout>
+        android:layout_alignParentBottom="true"/>
+</merge>

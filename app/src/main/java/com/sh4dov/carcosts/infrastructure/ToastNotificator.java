@@ -5,9 +5,6 @@ import android.widget.Toast;
 
 import com.sh4dov.common.Notificator;
 
-/**
- * Created by sh4dov on 2014-12-26.
- */
 public class ToastNotificator implements Notificator {
     private Activity activity;
 

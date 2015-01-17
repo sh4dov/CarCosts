@@ -4,15 +4,18 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
-/**
- * Created by sh4dov on 2014-12-17.
- */
 public class ProgressIndicator extends AsyncTask<Void, Integer, Void>
         implements ProgressPointer {
-    private Context mContext;
     ProgressDialog mProgress;
-    private int mProgressDialog=0;
+    private Context mContext;
+    private int mProgressDialog = 0;
     private Runnable job;
+
+    public ProgressIndicator(Context context, int progressDialog, Runnable job) {
+        this.mContext = context;
+        this.mProgressDialog = progressDialog;
+        this.job = job;
+    }
 
     @Override
     public void setProgress(int progress) {
@@ -24,17 +27,11 @@ public class ProgressIndicator extends AsyncTask<Void, Integer, Void>
         mProgress.setMax(max);
     }
 
-    public ProgressIndicator(Context context, int progressDialog, Runnable job){
-        this.mContext = context;
-        this.mProgressDialog = progressDialog;
-        this.job = job;
-    }
-
     @Override
     public void onPreExecute() {
         mProgress = new ProgressDialog(mContext);
         mProgress.setMessage("Please wait...");
-        if (mProgressDialog==ProgressDialog.STYLE_HORIZONTAL){
+        if (mProgressDialog == ProgressDialog.STYLE_HORIZONTAL) {
 
             mProgress.setIndeterminate(false);
             mProgress.setMax(100);
@@ -46,7 +43,7 @@ public class ProgressIndicator extends AsyncTask<Void, Integer, Void>
 
     @Override
     protected void onProgressUpdate(Integer... values) {
-        if (mProgressDialog==ProgressDialog.STYLE_HORIZONTAL){
+        if (mProgressDialog == ProgressDialog.STYLE_HORIZONTAL) {
             mProgress.setProgress(values[0]);
         }
     }

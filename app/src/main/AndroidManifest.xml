@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sh4dov.carcosts">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -19,15 +24,15 @@
         <activity
             android:name="com.sh4dov.carcosts.controllers.EditFuelActivity"
             android:label="@string/title_activity_edit_fuel"
-            android:parentActivityName="com.sh4dov.carcosts.controllers.MainActivity"></activity>
+            android:parentActivityName="com.sh4dov.carcosts.controllers.MainActivity"/>
         <activity
             android:name=".controllers.EditCostActivity"
             android:label="@string/title_activity_edit_cost"
-            android:parentActivityName=".controllers.MainActivity"></activity>
+            android:parentActivityName=".controllers.MainActivity"/>
         <activity
             android:name=".controllers.EditOilActivity"
             android:label="@string/title_activity_edit_oil"
-            android:parentActivityName=".controllers.MainActivity"></activity>
+            android:parentActivityName=".controllers.MainActivity"/>
     </application>
 
 </manifest>

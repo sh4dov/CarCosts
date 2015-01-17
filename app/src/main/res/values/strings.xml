@@ -34,5 +34,19 @@
     <string name="fuel">Fuel</string>
     <string name="other">Other</string>
     <string name="action_import">Import ...</string>
+    <string name="action_backup">Backup to GDrive</string>
+    <string name="action_restore">Restore from GDrive</string>
+    <string name="action_export_csv">Export to csv</string>
+    <string name="action_export">Export ...</string>
+    <string name="action_export_costs">Export costs</string>
+    <string name="action_export_oil">Export oil</string>
+    <string name="action_export_refueling">Export refueling</string>
+    <string name="cannot_create_file">Cannot create new file</string>
+    <string name="file_saved">File saved</string>
+    <string name="average_fuel_car">Average fuel by car</string>
+    <string name="average_fuel_calculated">Average fuel calculated</string>
+    <string name="overview">Overview</string>
+    <string name="total">Total</string>
+    <string name="backup_created">Backup created</string>
 
 </resources>

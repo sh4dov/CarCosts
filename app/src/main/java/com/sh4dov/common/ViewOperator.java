@@ -3,9 +3,7 @@ package com.sh4dov.common;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 
-import com.sh4dov.common.ViewHelper;
-
-public abstract class ViewOperator<T>{
+public abstract class ViewOperator<T> {
     protected final NumberPicker.Formatter twoDigitsFormatter;
     protected ViewHelper viewHelper;
 
@@ -20,6 +18,7 @@ public abstract class ViewOperator<T>{
     }
 
     public abstract T get(T instance);
+
     public abstract void set(T instance);
 
     protected void setOneDigitNumbers(double originalValue, int idPar1, int idPart2, int maxValue) {

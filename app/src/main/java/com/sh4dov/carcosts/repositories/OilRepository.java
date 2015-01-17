@@ -6,14 +6,11 @@ import android.database.Cursor;
 import com.sh4dov.carcosts.R;
 import com.sh4dov.carcosts.model.Oil;
 import com.sh4dov.common.Notificator;
-import com.sh4dov.common.ProgressPointerIndicator;
+import com.sh4dov.common.ProgressPointer;
 import com.sh4dov.common.ProgressPointerOperator;
 
 import java.util.ArrayList;
 
-/**
- * Created by sh4dov on 2014-12-30.
- */
 public class OilRepository extends BaseRepository {
     public OilRepository(DbHandler dbHandler, Notificator notificator) {
         super(dbHandler, notificator);
@@ -45,7 +42,7 @@ public class OilRepository extends BaseRepository {
         return values;
     }
 
-    public ArrayList<Oil> getOil(ProgressPointerIndicator progressPointer) {
+    public ArrayList<Oil> getOil(ProgressPointer progressPointer) {
         final ArrayList<Oil> result = new ArrayList<Oil>();
         final ProgressPointerOperator pointer = new ProgressPointerOperator(progressPointer);
 

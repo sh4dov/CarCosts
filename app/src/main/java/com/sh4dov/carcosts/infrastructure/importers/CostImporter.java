@@ -7,9 +7,6 @@ import com.sh4dov.common.Notificator;
 
 import java.io.File;
 
-/**
- * Created by sh4dov on 2014-12-31.
- */
 public class CostImporter extends ImporterBase {
 
     public CostImporter(File file, DbHandler dbHandler, Notificator notificator) {
@@ -19,9 +16,10 @@ public class CostImporter extends ImporterBase {
     @Override
     protected ContentValues createContentValues(String[] values) {
         ContentValues cv = new ContentValues();
-        cv.put(DbHandler.Tables.Costs.date, values[0]);
-        cv.put(DbHandler.Tables.Costs.cost, values[1]);
-        cv.put(DbHandler.Tables.Costs.comment, values[2]);
+        putIfCan(DbHandler.Tables.Costs.date, values, cv, 0);
+        putIfCan(DbHandler.Tables.Costs.cost, values, cv, 1);
+        putIfCan(DbHandler.Tables.Costs.comment, values, cv, 2);
+        putIfCan(DbHandler.Tables.Costs.isDeleted, values, cv, 3);
         return cv;
     }
 
