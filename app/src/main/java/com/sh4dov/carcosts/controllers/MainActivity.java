@@ -36,6 +36,8 @@ import com.sh4dov.common.ProgressPointerIndicator;
 import com.sh4dov.common.SaveFileDialog;
 import com.sh4dov.common.TaskScheduler;
 import com.sh4dov.common.gdrive.GDriveBackup;
+import com.sh4dov.common.gdrive.GDriveBase;
+import com.sh4dov.google.DriveService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -61,7 +63,8 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(FragmentFactory.FragmentPosition.AddRefueling);
-        gDriveBackup = new GDriveBackup(this, RequestCodes.Backup);
+        DriveService driveService = GDriveBase.createService(this);
+        gDriveBackup = new GDriveBackup(driveService, this, RequestCodes.Backup);
     }
 
     @Override
