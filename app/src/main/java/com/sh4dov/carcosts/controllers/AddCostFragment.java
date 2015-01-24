@@ -21,10 +21,37 @@ import com.sh4dov.common.ViewHelper;
 
 
 public class AddCostFragment extends Fragment {
+    private static final String SAVED_COST_KEY = "SavedCost";
     private FragmentOperator fragmentOperator;
+    private boolean saveState = true;
 
     public AddCostFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Cost cost = null;
+        if (savedInstanceState != null) {
+            cost = (Cost) savedInstanceState.getSerializable(SAVED_COST_KEY);
+        }
+
+        if (cost == null) {
+            cost = new Cost();
+        }
+
+        new CostViewOperator(new ViewHelper(getView())).set(cost);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            fragmentOperator = (FragmentOperator) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement " + FragmentOperator.class.getName());
+        }
     }
 
     @Override
@@ -40,24 +67,8 @@ public class AddCostFragment extends Fragment {
                 add();
             }
         });
+        saveState = true;
         return view;
-    }
-
-    @Override
-    public void onStart() {
-        new CostViewOperator(new ViewHelper(getView())).set(new Cost());
-
-        super.onStart();
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            fragmentOperator = (FragmentOperator) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " + FragmentOperator.class.getName());
-        }
     }
 
     @Override
@@ -66,10 +77,23 @@ public class AddCostFragment extends Fragment {
         fragmentOperator = null;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (saveState) {
+            Cost cost = new CostViewOperator(new ViewHelper(getView())).get(null);
+            outState.putSerializable(SAVED_COST_KEY, cost);
+        } else {
+            outState.remove(SAVED_COST_KEY);
+        }
+    }
+
     private void add() {
         Cost cost = new CostViewOperator(new ViewHelper(getView())).get(null);
 
         if (cost.isValid()) {
+            saveState = false;
             Activity activity = getActivity();
             CostRepository costRepository = new CostRepository(new DbHandler(activity), new ToastNotificator(activity));
             costRepository.add(cost);

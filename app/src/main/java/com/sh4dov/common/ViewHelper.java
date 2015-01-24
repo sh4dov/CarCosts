@@ -10,18 +10,22 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class ViewHelper {
-    private FindView findView;
+    private ViewAdapter viewAdapter;
 
     public ViewHelper(View view) {
-        findView = new ViewFindView(view);
+        viewAdapter = new ViewViewAdapter(view);
     }
 
     public ViewHelper(Activity activity) {
-        findView = new ActivityFindView(activity);
+        viewAdapter = new ActivityViewAdapter(activity);
+    }
+
+    public void clearFocus() {
+        viewAdapter.clearFocus();
     }
 
     public <T extends View> T get(int id) {
-        return (T) findView.findViewById(id);
+        return (T) viewAdapter.findViewById(id);
     }
 
     public Date getDate(int id) {
@@ -36,11 +40,6 @@ public class ViewHelper {
         return editText.getText().toString();
     }
 
-    public void setText(int id, String text) {
-        TextView textView = get(id);
-        textView.setText(text);
-    }
-
     public void setDate(int id, Date date) {
         DatePicker datePicker = get(id);
         Calendar calendar = Calendar.getInstance();
@@ -48,15 +47,27 @@ public class ViewHelper {
         datePicker.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
     }
 
-    private interface FindView {
+    public void setText(int id, String text) {
+        TextView textView = get(id);
+        textView.setText(text);
+    }
+
+    private interface ViewAdapter {
+        void clearFocus();
+
         View findViewById(int id);
     }
 
-    private class ViewFindView implements FindView {
+    private class ViewViewAdapter implements ViewAdapter {
         private View view;
 
-        public ViewFindView(View view) {
+        public ViewViewAdapter(View view) {
             this.view = view;
+        }
+
+        @Override
+        public void clearFocus() {
+            view.clearFocus();
         }
 
         @Override
@@ -65,11 +76,19 @@ public class ViewHelper {
         }
     }
 
-    private class ActivityFindView implements FindView {
+    private class ActivityViewAdapter implements ViewAdapter {
         private Activity activity;
 
-        public ActivityFindView(Activity activity) {
+        public ActivityViewAdapter(Activity activity) {
             this.activity = activity;
+        }
+
+        @Override
+        public void clearFocus() {
+            View focus = activity.getCurrentFocus();
+            if (focus != null) {
+                focus.clearFocus();
+            }
         }
 
         @Override

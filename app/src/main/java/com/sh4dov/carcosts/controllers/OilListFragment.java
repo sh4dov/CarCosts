@@ -37,6 +37,17 @@ public class OilListFragment extends ListFragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            listener = (EditOilListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement " + EditOilListener.class.getName());
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -71,17 +82,6 @@ public class OilListFragment extends ListFragment {
         listView.setAdapter(oilAdapter);
 
         return view;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            listener = (EditOilListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement " + EditOilListener.class.getName());
-        }
     }
 
     @Override

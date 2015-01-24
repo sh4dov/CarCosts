@@ -19,15 +19,38 @@ import com.sh4dov.carcosts.repositories.DbHandler;
 import com.sh4dov.carcosts.repositories.OilRepository;
 import com.sh4dov.common.ViewHelper;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class AddOilFragment extends Fragment {
+    private static final String SAVED_OIL_KEY = "SavedOil";
     private FragmentOperator fragmentOperator;
+    private boolean saveState = true;
 
     public AddOilFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Oil oil = new Oil();
+        if (savedInstanceState != null) {
+            oil = (Oil) savedInstanceState.getSerializable(SAVED_OIL_KEY);
+        }
+
+        if (oil == null) {
+            oil = new Oil();
+        }
+
+        new OilViewOperator(new ViewHelper(getView())).set(oil);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            fragmentOperator = (FragmentOperator) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement " + FragmentOperator.class.getName());
+        }
     }
 
     @Override
@@ -43,24 +66,8 @@ public class AddOilFragment extends Fragment {
                 add();
             }
         });
+        saveState = true;
         return view;
-    }
-
-    @Override
-    public void onStart() {
-        new OilViewOperator(new ViewHelper(getView())).set(new Oil());
-
-        super.onStart();
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            fragmentOperator = (FragmentOperator) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " + FragmentOperator.class.getName());
-        }
     }
 
     @Override
@@ -69,10 +76,23 @@ public class AddOilFragment extends Fragment {
         fragmentOperator = null;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (saveState) {
+            Oil oil = new OilViewOperator(new ViewHelper(getView())).get(null);
+            outState.putSerializable(SAVED_OIL_KEY, oil);
+        } else {
+            outState.remove(SAVED_OIL_KEY);
+        }
+    }
+
     private void add() {
         Oil oil = new OilViewOperator(new ViewHelper(getView())).get(null);
 
         if (oil.isValid()) {
+            saveState = false;
             Activity activity = getActivity();
             OilRepository oilRepository = new OilRepository(new DbHandler(activity), new ToastNotificator(activity));
             oilRepository.add(oil);

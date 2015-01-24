@@ -2,10 +2,10 @@ package com.sh4dov.common;
 
 public class NullProgressPointer implements ProgressPointer {
     @Override
-    public void setProgress(int progress) {
+    public void setMax(int max) {
     }
 
     @Override
-    public void setMax(int max) {
+    public void setProgress(int progress) {
     }
 }

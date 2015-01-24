@@ -3,7 +3,6 @@ package com.sh4dov.carcosts.controllers;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.NumberPicker;
 
 import com.sh4dov.carcosts.R;
 import com.sh4dov.carcosts.controllers.view.operators.FuelViewOperator;
@@ -18,6 +17,22 @@ public class EditFuelActivity extends Activity {
     public final static String EditFuelKey = "EditFuelKey";
     private Fuel fuel;
     private FuelRepository fuelRepository;
+
+    @Override
+    public void onStart() {
+        fuel = (Fuel) getIntent().getSerializableExtra(EditFuelKey);
+        Fuel previous = fuelRepository.getPrevious(fuel);
+        Fuel next = fuelRepository.getNext(fuel);
+        int maxMileage = next.mileage < fuel.mileage ? Fuel.MAX_MILEAGE : next.mileage;
+        ViewHelper viewHelper = new ViewHelper(this);
+        FuelViewOperator fuelViewOperator = new FuelViewOperator(viewHelper);
+        fuelViewOperator.setMileageMinMax(previous.mileage, maxMileage);
+        fuelViewOperator.set(fuel);
+
+        viewHelper.setDate(R.id.datePicker, fuel.date);
+
+        super.onStart();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,24 +61,5 @@ public class EditFuelActivity extends Activity {
                 finish();
             }
         });
-    }
-
-    @Override
-    public void onStart() {
-        fuel = (Fuel) getIntent().getSerializableExtra(EditFuelKey);
-        Fuel previous = fuelRepository.getPrevious(fuel);
-        Fuel next = fuelRepository.getNext(fuel);
-        int maxMileage = next.mileage < fuel.mileage ? Fuel.MAX_MILEAGE : next.mileage;
-        ViewHelper viewHelper = new ViewHelper(this);
-        new FuelViewOperator(viewHelper).set(fuel);
-
-        viewHelper.setDate(R.id.datePicker, fuel.date);
-
-        NumberPicker mileage = viewHelper.get(R.id.mileage);
-        mileage.setMinValue(previous.mileage);
-        mileage.setMaxValue(maxMileage);
-        mileage.setValue(fuel.mileage);
-
-        super.onStart();
     }
 }

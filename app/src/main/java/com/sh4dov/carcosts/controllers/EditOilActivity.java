@@ -19,6 +19,16 @@ public class EditOilActivity extends Activity {
     private OilRepository oilRepository;
 
     @Override
+    public void onStart() {
+        oil = (Oil) getIntent().getSerializableExtra(EditOilKey);
+        ViewHelper viewHelper = new ViewHelper(this);
+        new OilViewOperator(viewHelper).set(oil);
+        viewHelper.setDate(R.id.date, oil.date);
+
+        super.onStart();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_oil);
@@ -45,15 +55,5 @@ public class EditOilActivity extends Activity {
                 finish();
             }
         });
-    }
-
-    @Override
-    public void onStart() {
-        oil = (Oil) getIntent().getSerializableExtra(EditOilKey);
-        ViewHelper viewHelper = new ViewHelper(this);
-        new OilViewOperator(viewHelper).set(oil);
-        viewHelper.setDate(R.id.date, oil.date);
-
-        super.onStart();
     }
 }

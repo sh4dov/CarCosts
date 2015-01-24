@@ -20,22 +20,9 @@ public class SaveFileDialog extends FileDialogBase {
     }
 
     @Override
-    protected void onSelectedChanged(File selected) {
-        if (selected != null && selected.isFile()) {
-            fileName = selected.getName();
-            updateFileName();
-        }
-    }
-
-    @Override
     protected File getFinalSelection() {
         File file = super.getFinalSelection();
         return new File(file, fileName);
-    }
-
-    @Override
-    protected boolean shouldEnablePositiveButton(File selected) {
-        return selected != null && !fileName.isEmpty();
     }
 
     @Override
@@ -64,6 +51,19 @@ public class SaveFileDialog extends FileDialogBase {
         }
 
         return view;
+    }
+
+    @Override
+    protected void onSelectedChanged(File selected) {
+        if (selected != null && selected.isFile()) {
+            fileName = selected.getName();
+            updateFileName();
+        }
+    }
+
+    @Override
+    protected boolean shouldEnablePositiveButton(File selected) {
+        return selected != null && !fileName.isEmpty();
     }
 
     private EditText updateFileName() {

@@ -19,6 +19,16 @@ public class EditCostActivity extends Activity {
     private CostRepository costRepository;
 
     @Override
+    public void onStart() {
+        cost = (Cost) getIntent().getSerializableExtra(EditCostKey);
+        ViewHelper viewHelper = new ViewHelper(this);
+        new CostViewOperator(viewHelper).set(cost);
+        viewHelper.setDate(R.id.date, cost.date);
+
+        super.onStart();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_cost);
@@ -45,15 +55,5 @@ public class EditCostActivity extends Activity {
                 finish();
             }
         });
-    }
-
-    @Override
-    public void onStart() {
-        cost = (Cost) getIntent().getSerializableExtra(EditCostKey);
-        ViewHelper viewHelper = new ViewHelper(this);
-        new CostViewOperator(viewHelper).set(cost);
-        viewHelper.setDate(R.id.date, cost.date);
-
-        super.onStart();
     }
 }

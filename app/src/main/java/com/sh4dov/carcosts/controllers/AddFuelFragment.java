@@ -20,8 +20,39 @@ import com.sh4dov.carcosts.repositories.FuelRepository;
 import com.sh4dov.common.ViewHelper;
 
 public class AddFuelFragment extends Fragment {
-    private FuelRepository fuelRepository;
+    public static final String SAVED_FUEL_KEY = "SavedFuel";
+    private Fuel defaultFuel;
     private FragmentOperator fragmentOperator;
+    private FuelRepository fuelRepository;
+    private boolean saveState = true;
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Fuel fuel = null;
+        if (savedInstanceState != null) {
+            fuel = (Fuel) savedInstanceState.getSerializable(SAVED_FUEL_KEY);
+        }
+
+        defaultFuel = fuelRepository.getLastFuel();
+        if (fuel == null) {
+            fuel = defaultFuel;
+        }
+
+        FuelViewOperator operator = new FuelViewOperator(new ViewHelper(getView()));
+        operator.setMileageMinMax(defaultFuel.mileage, Fuel.MAX_MILEAGE);
+        operator.set(fuel);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            fragmentOperator = (FragmentOperator) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement " + FragmentOperator.class.getName());
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,17 +69,8 @@ public class AddFuelFragment extends Fragment {
                 add();
             }
         });
+        saveState = true;
         return view;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            fragmentOperator = (FragmentOperator) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " + FragmentOperator.class.getName());
-        }
     }
 
     @Override
@@ -58,18 +80,26 @@ public class AddFuelFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        Fuel fuel = fuelRepository.getLastFuel();
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
-        new FuelViewOperator(new ViewHelper(getView())).set(fuel);
-
-        super.onStart();
+        if (saveState) {
+            Fuel fuel = new FuelViewOperator(new ViewHelper(getView())).get(null);
+            if (fuel != null && defaultFuel != null && fuel.valuesEquals(defaultFuel)) {
+                outState.remove(SAVED_FUEL_KEY);
+                return;
+            }
+            outState.putSerializable(SAVED_FUEL_KEY, fuel);
+        } else {
+            outState.remove(SAVED_FUEL_KEY);
+        }
     }
 
     private void add() {
         Fuel fuel = new FuelViewOperator(new ViewHelper(getView())).get(null);
 
         if (fuel.isValid()) {
+            saveState = false;
             fuelRepository.add(fuel);
             fragmentOperator.goToFragment(FragmentFactory.FragmentPosition.RefuelingList);
             fragmentOperator.reload();

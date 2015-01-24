@@ -7,24 +7,14 @@ import android.os.AsyncTask;
 public class ProgressIndicator extends AsyncTask<Void, Integer, Void>
         implements ProgressPointer {
     ProgressDialog mProgress;
+    private Runnable job;
     private Context mContext;
     private int mProgressDialog = 0;
-    private Runnable job;
 
     public ProgressIndicator(Context context, int progressDialog, Runnable job) {
         this.mContext = context;
         this.mProgressDialog = progressDialog;
         this.job = job;
-    }
-
-    @Override
-    public void setProgress(int progress) {
-        publishProgress(progress);
-    }
-
-    @Override
-    public void setMax(int max) {
-        mProgress.setMax(max);
     }
 
     @Override
@@ -42,10 +32,13 @@ public class ProgressIndicator extends AsyncTask<Void, Integer, Void>
     }
 
     @Override
-    protected void onProgressUpdate(Integer... values) {
-        if (mProgressDialog == ProgressDialog.STYLE_HORIZONTAL) {
-            mProgress.setProgress(values[0]);
-        }
+    public void setMax(int max) {
+        mProgress.setMax(max);
+    }
+
+    @Override
+    public void setProgress(int progress) {
+        publishProgress(progress);
     }
 
     @Override
@@ -62,5 +55,12 @@ public class ProgressIndicator extends AsyncTask<Void, Integer, Void>
     @Override
     protected void onPostExecute(Void result) {
         mProgress.dismiss();
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... values) {
+        if (mProgressDialog == ProgressDialog.STYLE_HORIZONTAL) {
+            mProgress.setProgress(values[0]);
+        }
     }
 }

@@ -55,13 +55,13 @@ public class GDriveBackup extends GDriveBase implements GetFilesListener {
     @Override
     public void onGetFiles(List<File> files) {
         backupRoot = FileHelper.firstOrDefault(files, BACKUP_ROOT_FOLDER_NAME, FileHelper.ROOT_ID);
-        if(backupRoot == null){
+        if (backupRoot == null) {
             createBackupRootFolder();
             return;
         }
 
         backup = FileHelper.firstOrDefault(files, BACKUP_APP_FOLDER_NAME, backupRoot.getId());
-        if(backup == null){
+        if (backup == null) {
             createBackupFolder();
             return;
         }

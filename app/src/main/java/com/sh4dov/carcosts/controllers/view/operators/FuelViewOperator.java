@@ -17,19 +17,9 @@ public class FuelViewOperator extends ViewOperator<Fuel> {
     }
 
     @Override
-    public void set(Fuel fuel) {
-        setMileage(fuel.mileage, fuel.mileage + (int) fuel.distance);
-        setTwoDigitNumbers(fuel.liters, R.id.liters1, R.id.liters2, 100);
-        setTwoDigitNumbers(fuel.cost, R.id.cost1, R.id.cost2, 1000);
-        setTwoDigitNumbers(fuel.literCost, R.id.literCost1, R.id.literCost2, 10);
-        setOneDigitNumbers(fuel.averageFuel, R.id.averageFuel1, R.id.averageFuel2, 100);
-        setOneDigitNumbers(fuel.distance, R.id.distance1, R.id.distance2, 9999);
-        setText(fuel.fuelType, R.id.fuelType);
-    }
-
-    @Override
     public Fuel get(Fuel instance) {
         Fuel fuel = instance != null ? instance : new Fuel();
+        viewHelper.clearFocus();
 
         fuel.date = viewHelper.getDate(R.id.datePicker);
 
@@ -46,21 +36,32 @@ public class FuelViewOperator extends ViewOperator<Fuel> {
         return fuel;
     }
 
-    private void setMileage(int min, int value) {
+    @Override
+    public void set(Fuel fuel) {
         DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols();
         formatSymbols.setGroupingSeparator(' ');
         final DecimalFormat decimalFormat = new DecimalFormat("###,###.##", formatSymbols);
 
         NumberPicker numberPicker = viewHelper.get(R.id.mileage);
-        numberPicker.setMinValue(min);
-        numberPicker.setMaxValue(Fuel.MAX_MILEAGE);
-        numberPicker.setValue(value);
+        numberPicker.setValue(fuel.mileage);
         numberPicker.setFormatter(new NumberPicker.Formatter() {
             @Override
             public String format(int i) {
                 return decimalFormat.format(i);
             }
         });
+
+        setTwoDigitNumbers(fuel.liters, R.id.liters1, R.id.liters2, 100);
+        setTwoDigitNumbers(fuel.cost, R.id.cost1, R.id.cost2, 1000);
+        setTwoDigitNumbers(fuel.literCost, R.id.literCost1, R.id.literCost2, 10);
+        setOneDigitNumbers(fuel.averageFuel, R.id.averageFuel1, R.id.averageFuel2, 100);
+        setOneDigitNumbers(fuel.distance, R.id.distance1, R.id.distance2, 9999);
+        setText(fuel.fuelType, R.id.fuelType);
     }
 
+    public void setMileageMinMax(int min, int max) {
+        NumberPicker numberPicker = viewHelper.get(R.id.mileage);
+        numberPicker.setMinValue(min);
+        numberPicker.setMaxValue(max);
+    }
 }

@@ -14,7 +14,7 @@ public class CostViewOperator extends ViewOperator<Cost> {
     @Override
     public Cost get(Cost instance) {
         Cost cost = instance != null ? instance : new Cost();
-
+        viewHelper.clearFocus();
         cost.date = viewHelper.getDate(R.id.date);
         cost.cost = getNumber(R.id.cost1, R.id.cost2, 100);
         cost.comment = viewHelper.getText(R.id.comment);

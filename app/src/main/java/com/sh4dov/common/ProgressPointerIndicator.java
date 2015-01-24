@@ -3,9 +3,11 @@ package com.sh4dov.common;
 public class ProgressPointerIndicator implements ProgressPointer {
     private ProgressPointer progressPointer;
 
-    public void setProgressPointer(ProgressPointer progressPointer) {
-
-        this.progressPointer = progressPointer;
+    @Override
+    public void setMax(int max) {
+        if (progressPointer != null) {
+            progressPointer.setMax(max);
+        }
     }
 
     @Override
@@ -15,10 +17,8 @@ public class ProgressPointerIndicator implements ProgressPointer {
         }
     }
 
-    @Override
-    public void setMax(int max) {
-        if (progressPointer != null) {
-            progressPointer.setMax(max);
-        }
+    public void setProgressPointer(ProgressPointer progressPointer) {
+
+        this.progressPointer = progressPointer;
     }
 }

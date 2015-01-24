@@ -26,14 +26,25 @@ import java.util.ArrayList;
 
 public class CostListFragment extends ListFragment {
 
-    private EditCostListener listener;
     private ArrayList<Cost> costs = new ArrayList<Cost>();
+    private EditCostListener listener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public CostListFragment() {
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            listener = (EditCostListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement " + EditCostListener.class.getName());
+        }
     }
 
     @Override
@@ -71,17 +82,6 @@ public class CostListFragment extends ListFragment {
         listView.setAdapter(costAdapter);
 
         return view;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            listener = (EditCostListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement " + EditCostListener.class.getName());
-        }
     }
 
     @Override

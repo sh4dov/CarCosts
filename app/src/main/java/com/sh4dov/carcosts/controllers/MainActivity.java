@@ -45,26 +45,38 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class MainActivity extends Activity implements FragmentOperator, FuelListFragment.EditFuelListener, CostListFragment.EditCostListener, OilListFragment.EditOilListener {
-    private ViewPager viewPager;
-    private SectionsPagerAdapter pagerAdapter;
     private String costBackupName = "cost.backup.csv";
     private String fuelBackupName = "fuel.backup.csv";
-    private String oilBackupName = "oil.backup.csv";
     private GDriveBackup gDriveBackup;
+    private String oilBackupName = "oil.backup.csv";
+    private SectionsPagerAdapter pagerAdapter;
     private File path = null;
+    private ViewPager viewPager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public void edit(Fuel fuel) {
+        Intent intent = new Intent(this, EditFuelActivity.class);
+        intent.putExtra(EditFuelActivity.EditFuelKey, fuel);
+        startActivityForResult(intent, RequestCodes.EditFuel);
+    }
 
-        pagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+    @Override
+    public void edit(Cost cost) {
+        Intent intent = new Intent(this, EditCostActivity.class);
+        intent.putExtra(EditCostActivity.EditCostKey, cost);
+        startActivityForResult(intent, RequestCodes.EditCost);
+    }
 
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setCurrentItem(FragmentFactory.FragmentPosition.AddRefueling);
-        DriveService driveService = GDriveBase.createService(this);
-        gDriveBackup = new GDriveBackup(driveService, this, RequestCodes.Backup);
+    @Override
+    public void edit(Oil oil) {
+        Intent intent = new Intent(this, EditOilActivity.class);
+        intent.putExtra(EditOilActivity.EditOilKey, oil);
+        startActivityForResult(intent, RequestCodes.EditCost);
+    }
+
+    @Override
+    public void goToFragment(int fragmentId) {
+        viewPager.setCurrentItem(fragmentId);
     }
 
     @Override
@@ -149,6 +161,54 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void reload() {
+        pagerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case RequestCodes.EditFuel:
+            case RequestCodes.EditCost:
+            case RequestCodes.EditOil:
+                reload();
+                break;
+
+            case RequestCodes.Backup:
+                if (resultCode == RESULT_OK) {
+                    String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                    gDriveBackup.backup(accountName);
+                }
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        pagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(FragmentFactory.FragmentPosition.AddRefueling);
+        DriveService driveService = GDriveBase.createService(this);
+        gDriveBackup = new GDriveBackup(driveService, this, RequestCodes.Backup);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        pagerAdapter.saveState();
+    }
+
+    protected void onStop() {
+        super.onStop();
+        gDriveBackup.close();
+    }
+
     private void choseAccount(int requestCode) {
         Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"}, true, null, null, null, null);
         startActivityForResult(intent, requestCode);
@@ -170,6 +230,41 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
                                 saveFile(file, fileContent);
                             }
                         });
+                        pointer.setProgressPointer(progressIndicator);
+                        progressIndicator.execute();
+                    }
+                })
+                .setPath(path)
+                .show(getFragmentManager(), "");
+    }
+
+    private void importFromCsv(final ImporterFactory importerFactory, final int fragmentId) {
+        final Activity activity = this;
+        final DbHandler dbHandler = new DbHandler(activity);
+        final Notificator notificator = new ToastNotificator(activity);
+
+        new OpenFileDialog()
+                .addListeners(new OpenFileDialog.DialogListener() {
+                    @Override
+                    public void selected(final File file) {
+                        final ProgressPointerIndicator pointer = new ProgressPointerIndicator();
+                        ProgressIndicator progressIndicator = new ProgressIndicator(activity, ProgressDialog.STYLE_HORIZONTAL, new TaskScheduler(activity)
+                                .willExecute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        savePath(file);
+                                        importerFactory
+                                                .create(file, dbHandler, notificator)
+                                                .importFromCsv(pointer);
+                                    }
+                                })
+                                .willExecuteOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        goToFragment(fragmentId);
+                                        reload();
+                                    }
+                                }));
                         pointer.setProgressPointer(progressIndicator);
                         progressIndicator.execute();
                     }
@@ -209,41 +304,6 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
         notificator.showInfo(R.string.file_saved);
     }
 
-    private void importFromCsv(final ImporterFactory importerFactory, final int fragmentId) {
-        final Activity activity = this;
-        final DbHandler dbHandler = new DbHandler(activity);
-        final Notificator notificator = new ToastNotificator(activity);
-
-        new OpenFileDialog()
-                .addListeners(new OpenFileDialog.DialogListener() {
-                    @Override
-                    public void selected(final File file) {
-                        final ProgressPointerIndicator pointer = new ProgressPointerIndicator();
-                        ProgressIndicator progressIndicator = new ProgressIndicator(activity, ProgressDialog.STYLE_HORIZONTAL, new TaskScheduler(activity)
-                                .willExecute(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        savePath(file);
-                                        importerFactory
-                                                .create(file, dbHandler, notificator)
-                                                .importFromCsv(pointer);
-                                    }
-                                })
-                                .willExecuteOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        goToFragment(fragmentId);
-                                        reload();
-                                    }
-                                }));
-                        pointer.setProgressPointer(progressIndicator);
-                        progressIndicator.execute();
-                    }
-                })
-                .setPath(path)
-                .show(getFragmentManager(), "");
-    }
-
     private void savePath(File file) {
         if (file == null) {
             return;
@@ -259,68 +319,15 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
         }
     }
 
-    @Override
-    public void goToFragment(int fragmentId) {
-        viewPager.setCurrentItem(fragmentId);
-    }
-
-    @Override
-    public void reload() {
-        pagerAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void edit(Fuel fuel) {
-        Intent intent = new Intent(this, EditFuelActivity.class);
-        intent.putExtra(EditFuelActivity.EditFuelKey, fuel);
-        startActivityForResult(intent, RequestCodes.EditFuel);
-    }
-
-    @Override
-    public void edit(Cost cost) {
-        Intent intent = new Intent(this, EditCostActivity.class);
-        intent.putExtra(EditCostActivity.EditCostKey, cost);
-        startActivityForResult(intent, RequestCodes.EditCost);
-    }
-
-    @Override
-    public void edit(Oil oil) {
-        Intent intent = new Intent(this, EditOilActivity.class);
-        intent.putExtra(EditOilActivity.EditOilKey, oil);
-        startActivityForResult(intent, RequestCodes.EditCost);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case RequestCodes.EditFuel:
-            case RequestCodes.EditCost:
-            case RequestCodes.EditOil:
-                reload();
-                break;
-
-            case RequestCodes.Backup:
-                if (resultCode == RESULT_OK) {
-                    String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                    gDriveBackup.backup(accountName);
-                }
-        }
-    }
-
-    protected void onStop() {
-        super.onStop();
-        gDriveBackup.close();
-    }
-
 
     private interface ImporterFactory {
         public ImporterBase create(File file, DbHandler dbHandler, Notificator notificator);
     }
 
     private static class RequestCodes {
-        public static final int EditFuel = 1;
-        public static final int EditCost = 2;
-        public static final int EditOil = 3;
         public static final int Backup = 4;
+        public static final int EditCost = 2;
+        public static final int EditFuel = 1;
+        public static final int EditOil = 3;
     }
 }

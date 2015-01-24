@@ -12,16 +12,6 @@ public class TaskScheduler implements Runnable {
         this.activity = activity;
     }
 
-    public TaskScheduler willExecute(Runnable runnable) {
-        storage.add(new RunnableStorage(runnable));
-        return this;
-    }
-
-    public TaskScheduler willExecuteOnUiThread(Runnable runnable) {
-        storage.add(new RunnableStorage(runnable, true));
-        return this;
-    }
-
     @Override
     public void run() {
         for (RunnableStorage r : storage) {
@@ -31,6 +21,16 @@ public class TaskScheduler implements Runnable {
                 r.runnable.run();
             }
         }
+    }
+
+    public TaskScheduler willExecute(Runnable runnable) {
+        storage.add(new RunnableStorage(runnable));
+        return this;
+    }
+
+    public TaskScheduler willExecuteOnUiThread(Runnable runnable) {
+        storage.add(new RunnableStorage(runnable, true));
+        return this;
     }
 
     private class RunnableStorage {

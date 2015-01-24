@@ -17,12 +17,12 @@ public class ListenerList<L> {
         }
     }
 
-    public void remove(L listener) {
-        listenerList.remove(listener);
-    }
-
     public List<L> getListenerList() {
         return listenerList;
+    }
+
+    public void remove(L listener) {
+        listenerList.remove(listener);
     }
 
     public interface FireHandler<L> {

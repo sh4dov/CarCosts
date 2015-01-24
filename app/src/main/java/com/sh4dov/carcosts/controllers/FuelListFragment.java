@@ -37,6 +37,16 @@ public class FuelListFragment extends ListFragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            listener = (EditFuelListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement " + EditFuelListener.class.getName());
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -70,16 +80,6 @@ public class FuelListFragment extends ListFragment {
         listView.setAdapter(fuelsAdapter);
 
         return view;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            listener = (EditFuelListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " + EditFuelListener.class.getName());
-        }
     }
 
     @Override

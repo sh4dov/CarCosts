@@ -14,7 +14,7 @@ public class OilViewOperator extends ViewOperator<Oil> {
     @Override
     public Oil get(Oil instance) {
         Oil oil = instance != null ? instance : new Oil();
-
+        viewHelper.clearFocus();
         oil.date = viewHelper.getDate(R.id.date);
         oil.liters = getNumber(R.id.oil1, R.id.oil2, 100);
         oil.comment = viewHelper.getText(R.id.comment);

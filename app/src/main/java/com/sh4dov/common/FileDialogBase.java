@@ -23,30 +23,16 @@ import java.util.Collections;
 
 public abstract class FileDialogBase extends DialogFragment {
     private static final String PARENT = "..";
-    private ListenerList<DialogListener> listeners = new ListenerList<DialogListener>();
-    private File path = null;
+    private AlertDialog dialog;
     private File file = null;
     private ArrayList<String> items = new ArrayList<String>();
-    private AlertDialog dialog;
+    private ListenerList<DialogListener> listeners = new ListenerList<DialogListener>();
+    private File path = null;
     private ViewHelper viewHelper;
 
     public FileDialogBase addListeners(DialogListener listener) {
         listeners.add(listener);
         return this;
-    }
-
-    public FileDialogBase setPath(File path) {
-        this.path = path;
-        return this;
-    }
-
-    private void onSelected(final File file) {
-        listeners.fireEvent(new ListenerList.FireHandler<DialogListener>() {
-            @Override
-            public void fireEvent(DialogListener listener) {
-                listener.selected(file);
-            }
-        });
     }
 
     @Override
@@ -112,8 +98,13 @@ public abstract class FileDialogBase extends DialogFragment {
         return dialog;
     }
 
-    protected File getFinalSelection() {
-        return getSelected();
+    public FileDialogBase setPath(File path) {
+        this.path = path;
+        return this;
+    }
+
+    protected void calculatePossitiveButtonState() {
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(shouldEnablePositiveButton(getSelected()));
     }
 
     protected void detachFile() {
@@ -124,19 +115,24 @@ public abstract class FileDialogBase extends DialogFragment {
         }
     }
 
-    protected void calculatePossitiveButtonState() {
-        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(shouldEnablePositiveButton(getSelected()));
+    protected File getFinalSelection() {
+        return getSelected();
     }
-
-    protected abstract void onSelectedChanged(File selected);
 
     protected File getSelected() {
         return file != null ? file : path;
     }
 
+    protected abstract View getView(LayoutInflater layoutInflater);
+
+    protected abstract void onSelectedChanged(File selected);
+
     protected abstract boolean shouldEnablePositiveButton(File selected);
 
-    protected abstract View getView(LayoutInflater layoutInflater);
+    private void displayPath() {
+        TextView textView = viewHelper.get(R.id.path);
+        textView.setText(file != null ? file.getAbsolutePath() : path.getAbsolutePath());
+    }
 
     private File getSelected(int i) {
         String item = items.get(i);
@@ -160,9 +156,13 @@ public abstract class FileDialogBase extends DialogFragment {
         Collections.addAll(items, list);
     }
 
-    private void displayPath() {
-        TextView textView = viewHelper.get(R.id.path);
-        textView.setText(file != null ? file.getAbsolutePath() : path.getAbsolutePath());
+    private void onSelected(final File file) {
+        listeners.fireEvent(new ListenerList.FireHandler<DialogListener>() {
+            @Override
+            public void fireEvent(DialogListener listener) {
+                listener.selected(file);
+            }
+        });
     }
 
     public interface DialogListener {

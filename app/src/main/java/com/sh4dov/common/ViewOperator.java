@@ -21,6 +21,12 @@ public abstract class ViewOperator<T> {
 
     public abstract void set(T instance);
 
+    protected double getNumber(int idPart1, int idPart2, int divider) {
+        NumberPicker part1 = viewHelper.get(idPart1);
+        NumberPicker part2 = viewHelper.get(idPart2);
+        return part1.getValue() + ((double) part2.getValue() / divider);
+    }
+
     protected void setOneDigitNumbers(double originalValue, int idPar1, int idPart2, int maxValue) {
         NumberPicker numberPicker1 = viewHelper.get(idPar1);
         NumberPicker numberPicker2 = viewHelper.get(idPart2);
@@ -32,6 +38,11 @@ public abstract class ViewOperator<T> {
         numberPicker2.setMaxValue(9);
         numberPicker1.setValue(part1);
         numberPicker2.setValue(part2);
+    }
+
+    protected void setText(String text, int id) {
+        EditText editText = viewHelper.get(id);
+        editText.setText(text);
     }
 
     protected void setTwoDigitNumbers(double originalValue, int idPart1, int idPart2, int maxValue) {
@@ -46,16 +57,5 @@ public abstract class ViewOperator<T> {
         numberPicker2.setFormatter(twoDigitsFormatter);
         numberPicker1.setValue(part1);
         numberPicker2.setValue(part2);
-    }
-
-    protected double getNumber(int idPart1, int idPart2, int divider) {
-        NumberPicker part1 = viewHelper.get(idPart1);
-        NumberPicker part2 = viewHelper.get(idPart2);
-        return part1.getValue() + ((double) part2.getValue() / divider);
-    }
-
-    protected void setText(String text, int id) {
-        EditText editText = viewHelper.get(id);
-        editText.setText(text);
     }
 }
