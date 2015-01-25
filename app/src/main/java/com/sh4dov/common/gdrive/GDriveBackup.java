@@ -63,15 +63,15 @@ public class GDriveBackup extends GDriveBase implements GetFilesListener {
         }
 
         File costBackup = FileHelper.firstOrDefault(files, CarCostGDriveConst.COST_BACKUP_NAME, backup.getId());
-        if(costBackup != null){
+        if (costBackup != null) {
             this.costBackup = costBackup;
         }
         File fuelBackup = FileHelper.firstOrDefault(files, CarCostGDriveConst.FUEL_BACKUP_NAME, backup.getId());
-        if(fuelBackup != null){
+        if (fuelBackup != null) {
             this.fuelBackup = fuelBackup;
         }
         File oilBackup = FileHelper.firstOrDefault(files, CarCostGDriveConst.OIL_BACKUP_NAME, backup.getId());
-        if(oilBackup != null){
+        if (oilBackup != null) {
             this.oilBackup = oilBackup;
         }
         setBackupParentReference();

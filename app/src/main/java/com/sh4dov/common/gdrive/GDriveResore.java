@@ -22,6 +22,7 @@ import com.sh4dov.google.utils.FileHelper;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
 
 public class GDriveResore extends GDriveBase implements GetFilesListener {
@@ -60,6 +61,7 @@ public class GDriveResore extends GDriveBase implements GetFilesListener {
         final Runnable reload = new Runnable() {
             @Override
             public void run() {
+                getProgressDialog().hide();
                 getNotificator().showInfo("Restored");
                 fragmentOperator.reload();
             }
@@ -68,85 +70,33 @@ public class GDriveResore extends GDriveBase implements GetFilesListener {
         final Runnable oilRunnable = new Runnable() {
             @Override
             public void run() {
-                if (oilBackup != null) {
-                    getProgressDialog().show();
-                    getProgressDialog().setMessage("Downloading " + oilBackup.getTitle());
-                    getDriveService().downloadFile(oilBackup, new DownloadFileListener() {
-                        @Override
-                        public void onDownloadedFile(File file, final byte[] bytes) {
-                            getProgressDialog().hide();
-                            restoreFromGDrive(new ImporterFactory() {
-                                @Override
-                                public ImporterBase create(DbHandler dbHandler) {
-                                    return new OilImporter(new InputStreamReader(new ByteArrayInputStream(bytes)), dbHandler, getNotificator());
-                                }
-                            }, CarCostGDriveConst.OIL_BACKUP_NAME, reload);
-                        }
-
-                        @Override
-                        public void onProgress(File file, double v) {
-
-                        }
-                    }, GDriveResore.this, GDriveResore.this);
-                }
-                else {
-                    reload.run();
-                }
+                downloadFile(oilBackup, new ImporterFactory() {
+                    @Override
+                    public ImporterBase create(DbHandler dbHandler, Reader reader) {
+                        return new OilImporter(reader, dbHandler, getNotificator());
+                    }
+                }, CarCostGDriveConst.OIL_BACKUP_NAME, reload);
             }
         };
 
         final Runnable fuelRunnable = new Runnable() {
             @Override
             public void run() {
-                if (fuelBackup != null) {
-                    getProgressDialog().show();
-                    getProgressDialog().setMessage("Downloading " + fuelBackup.getTitle());
-                    getDriveService().downloadFile(fuelBackup, new DownloadFileListener() {
-                        @Override
-                        public void onDownloadedFile(File file, final byte[] bytes) {
-                            getProgressDialog().hide();
-                            restoreFromGDrive(new ImporterFactory() {
-                                @Override
-                                public ImporterBase create(DbHandler dbHandler) {
-                                    return new FuelImporter(new InputStreamReader(new ByteArrayInputStream(bytes)), dbHandler, getNotificator());
-                                }
-                            }, CarCostGDriveConst.FUEL_BACKUP_NAME, oilRunnable);
-                        }
-
-                        @Override
-                        public void onProgress(File file, double v) {
-
-                        }
-                    }, GDriveResore.this, GDriveResore.this);
-                } else {
-                    oilRunnable.run();
-                }
+                downloadFile(fuelBackup, new ImporterFactory() {
+                    @Override
+                    public ImporterBase create(DbHandler dbHandler, Reader reader) {
+                        return new FuelImporter(reader, dbHandler, getNotificator());
+                    }
+                }, CarCostGDriveConst.FUEL_BACKUP_NAME, oilRunnable);
             }
         };
 
-        if (costBackup != null) {
-            getProgressDialog().show();
-            getProgressDialog().setMessage("Downloading " + costBackup.getTitle());
-            getDriveService().downloadFile(costBackup, new DownloadFileListener() {
-                @Override
-                public void onDownloadedFile(File file, final byte[] bytes) {
-                    getProgressDialog().hide();
-                    restoreFromGDrive(new ImporterFactory() {
-                        @Override
-                        public ImporterBase create(DbHandler dbHandler) {
-                            return new CostImporter(new InputStreamReader(new ByteArrayInputStream(bytes)), dbHandler, getNotificator());
-                        }
-                    }, CarCostGDriveConst.COST_BACKUP_NAME, fuelRunnable);
-                }
-
-                @Override
-                public void onProgress(File file, double v) {
-
-                }
-            }, this, this);
-        } else {
-            fuelRunnable.run();
-        }
+        downloadFile(costBackup, new ImporterFactory() {
+            @Override
+            public ImporterBase create(DbHandler dbHandler, Reader reader) {
+                return new CostImporter(reader, dbHandler, getNotificator());
+            }
+        }, CarCostGDriveConst.COST_BACKUP_NAME, fuelRunnable);
     }
 
     public void restore(String accountName) {
@@ -156,20 +106,43 @@ public class GDriveResore extends GDriveBase implements GetFilesListener {
         restoreFromGDrive();
     }
 
-    private void restoreFromGDrive(final ImporterFactory importerFactory, final String backupName, final Runnable next) {
+    private void downloadFile(File file, final ImporterFactory importerFactory, final String backupName, final Runnable next) {
+        if (file == null) {
+            if (next != null) {
+                next.run();
+            }
+            return;
+        }
+
+        getProgressDialog().show();
+        getProgressDialog().setMessage("Downloading " + file.getTitle());
+        getDriveService().downloadFile(file, new DownloadFileListener() {
+            @Override
+            public void onDownloadedFile(File file, final byte[] bytes) {
+                getProgressDialog().hide();
+                restoreFromGDrive(importerFactory.create(new DbHandler(activity), new InputStreamReader(new ByteArrayInputStream(bytes))), backupName, next);
+            }
+
+            @Override
+            public void onProgress(File file, double v) {
+            }
+        }, this, this);
+    }
+
+    private void restoreFromGDrive(final ImporterBase importer, final String backupName, final Runnable next) {
         final ProgressPointerIndicator pointer = new ProgressPointerIndicator();
         ProgressIndicator progressIndicator = new ProgressIndicator(activity, ProgressDialog.STYLE_HORIZONTAL, new TaskScheduler(activity)
                 .willExecute(new Runnable() {
                     @Override
                     public void run() {
-                        importerFactory.create(new DbHandler(activity)).importFromCsv(pointer);
+                        importer.importFromCsv(pointer);
                     }
                 })
                 .willExecuteOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         getNotificator().showInfo("restored from " + backupName);
-                        if(next != null){
+                        if (next != null) {
                             next.run();
                         }
                     }
