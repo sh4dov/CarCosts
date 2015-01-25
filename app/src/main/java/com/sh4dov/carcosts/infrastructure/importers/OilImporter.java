@@ -5,17 +5,12 @@ import android.content.ContentValues;
 import com.sh4dov.carcosts.repositories.DbHandler;
 import com.sh4dov.common.Notificator;
 
-import java.io.File;
+import java.io.Reader;
 
 public class OilImporter extends ImporterBase {
 
-    public OilImporter(File file, DbHandler dbHandler, Notificator notificator) {
-        super(file, dbHandler, notificator);
-    }
-
-    @Override
-    protected String getTable() {
-        return DbHandler.Tables.oil;
+    public OilImporter(Reader reader, DbHandler dbHandler, Notificator notificator) {
+        super(reader, dbHandler, notificator);
     }
 
     @Override
@@ -27,6 +22,11 @@ public class OilImporter extends ImporterBase {
         putIfCan(DbHandler.Tables.Oil.isDeleted, values, cv, 3);
 
         return cv;
+    }
+
+    @Override
+    protected String getTable() {
+        return DbHandler.Tables.oil;
     }
 }
 

@@ -5,12 +5,12 @@ import android.content.ContentValues;
 import com.sh4dov.carcosts.repositories.DbHandler;
 import com.sh4dov.common.Notificator;
 
-import java.io.File;
+import java.io.Reader;
 
 public class CostImporter extends ImporterBase {
 
-    public CostImporter(File file, DbHandler dbHandler, Notificator notificator) {
-        super(file, dbHandler, notificator);
+    public CostImporter(Reader reader, DbHandler dbHandler, Notificator notificator) {
+        super(reader, dbHandler, notificator);
     }
 
     @Override

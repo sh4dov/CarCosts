@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,17 +38,20 @@ import com.sh4dov.common.SaveFileDialog;
 import com.sh4dov.common.TaskScheduler;
 import com.sh4dov.common.gdrive.GDriveBackup;
 import com.sh4dov.common.gdrive.GDriveBase;
+import com.sh4dov.common.gdrive.GDriveResore;
 import com.sh4dov.google.DriveService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 
 public class MainActivity extends Activity implements FragmentOperator, FuelListFragment.EditFuelListener, CostListFragment.EditCostListener, OilListFragment.EditOilListener {
     private String costBackupName = "cost.backup.csv";
     private String fuelBackupName = "fuel.backup.csv";
     private GDriveBackup gDriveBackup;
+    private GDriveResore gDriveRestore;
     private String oilBackupName = "oil.backup.csv";
     private SectionsPagerAdapter pagerAdapter;
     private File path = null;
@@ -99,7 +103,13 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
                         new ImporterFactory() {
                             @Override
                             public ImporterBase create(File file, DbHandler dbHandler, Notificator notificator) {
-                                return new CostImporter(file, dbHandler, notificator);
+                                try {
+                                    return new CostImporter(new FileReader(file), dbHandler, notificator);
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                    notificator.showInfo(e.getMessage());
+                                }
+                                return null;
                             }
                         },
                         FragmentFactory.FragmentPosition.CostsList);
@@ -110,7 +120,13 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
                         new ImporterFactory() {
                             @Override
                             public ImporterBase create(File file, DbHandler dbHandler, Notificator notificator) {
-                                return new OilImporter(file, dbHandler, notificator);
+                                try {
+                                    return new OilImporter(new FileReader(file), dbHandler, notificator);
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                    notificator.showInfo(e.getMessage());
+                                }
+                                return null;
                             }
                         },
                         FragmentFactory.FragmentPosition.OilList);
@@ -121,7 +137,13 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
                         new ImporterFactory() {
                             @Override
                             public ImporterBase create(File file, DbHandler dbHandler, Notificator notificator) {
-                                return new FuelImporter(file, dbHandler, notificator);
+                                try {
+                                    return new FuelImporter(new FileReader(file), dbHandler, notificator);
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                    notificator.showInfo(e.getMessage());
+                                }
+                                return null;
                             }
                         },
                         FragmentFactory.FragmentPosition.RefuelingList);
@@ -129,6 +151,10 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
 
             case R.id.action_backup:
                 choseAccount(RequestCodes.Backup);
+                return true;
+
+            case R.id.action_restore:
+                choseAccount(RequestCodes.Restore);
                 return true;
 
             case R.id.action_export_costs:
@@ -180,6 +206,13 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
                     String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                     gDriveBackup.backup(accountName);
                 }
+                break;
+
+            case RequestCodes.Restore:
+                if (resultCode == RESULT_OK) {
+                    String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                    gDriveRestore.restore(accountName);
+                }
         }
     }
 
@@ -195,10 +228,11 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
         viewPager.setCurrentItem(FragmentFactory.FragmentPosition.AddRefueling);
         DriveService driveService = GDriveBase.createService(this);
         gDriveBackup = new GDriveBackup(driveService, this, RequestCodes.Backup);
+        gDriveRestore = new GDriveResore(driveService, this, RequestCodes.Restore, this);
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         pagerAdapter.saveState();
@@ -207,6 +241,7 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
     protected void onStop() {
         super.onStop();
         gDriveBackup.close();
+        gDriveRestore.close();
     }
 
     private void choseAccount(int requestCode) {
@@ -329,5 +364,6 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
         public static final int EditCost = 2;
         public static final int EditFuel = 1;
         public static final int EditOil = 3;
+        public static final int Restore = 5;
     }
 }

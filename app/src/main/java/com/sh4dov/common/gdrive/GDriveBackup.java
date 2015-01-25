@@ -26,17 +26,13 @@ import com.sh4dov.google.utils.FileHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class GDriveBackup extends GDriveBase implements GetFilesListener {
-    private static final String BACKUP_APP_FOLDER_NAME = "Car Costs backups";
-    private static final String BACKUP_ROOT_FOLDER_NAME = "backups";
-    private static final String COST_BACKUP_NAME = "cost.backup.csv";
-    private static final String FUEL_BACKUP_NAME = "fuel.backup.csv";
-    private static final String OIL_BACKUP_NAME = "oil.backup.csv";
     File backup;
     File backupRoot;
-    File costBackup = FileBuilder.createNewFile().setTitle(COST_BACKUP_NAME).build();
-    File fuelBackup = FileBuilder.createNewFile().setTitle(FUEL_BACKUP_NAME).build();
-    File oilBackup = FileBuilder.createNewFile().setTitle(OIL_BACKUP_NAME).build();
+    File costBackup = FileBuilder.createNewFile().setTitle(CarCostGDriveConst.COST_BACKUP_NAME).build();
+    File fuelBackup = FileBuilder.createNewFile().setTitle(CarCostGDriveConst.FUEL_BACKUP_NAME).build();
+    File oilBackup = FileBuilder.createNewFile().setTitle(CarCostGDriveConst.OIL_BACKUP_NAME).build();
     private Activity activity;
 
     public GDriveBackup(DriveService driveService, Activity activity, final int reconnectRequestCode) {
@@ -48,33 +44,43 @@ public class GDriveBackup extends GDriveBase implements GetFilesListener {
     public void backup(String accountName) {
         getDriveService()
                 .setAccountName(accountName)
-                .setApplicationName("Car Costs");
+                .setApplicationName(CarCostGDriveConst.APPLICATION_NAME);
         backupOnGDrive();
     }
 
     @Override
     public void onGetFiles(List<File> files) {
-        backupRoot = FileHelper.firstOrDefault(files, BACKUP_ROOT_FOLDER_NAME, FileHelper.ROOT_ID);
+        backupRoot = FileHelper.firstOrDefault(files, CarCostGDriveConst.BACKUP_ROOT_FOLDER_NAME, FileHelper.ROOT_ID);
         if (backupRoot == null) {
             createBackupRootFolder();
             return;
         }
 
-        backup = FileHelper.firstOrDefault(files, BACKUP_APP_FOLDER_NAME, backupRoot.getId());
+        backup = FileHelper.firstOrDefault(files, CarCostGDriveConst.BACKUP_APP_FOLDER_NAME, backupRoot.getId());
         if (backup == null) {
             createBackupFolder();
             return;
         }
 
-        costBackup = FileHelper.firstOrDefault(files, COST_BACKUP_NAME, backup.getId());
-        fuelBackup = FileHelper.firstOrDefault(files, FUEL_BACKUP_NAME, backup.getId());
-        oilBackup = FileHelper.firstOrDefault(files, OIL_BACKUP_NAME, backup.getId());
+        File costBackup = FileHelper.firstOrDefault(files, CarCostGDriveConst.COST_BACKUP_NAME, backup.getId());
+        if(costBackup != null){
+            this.costBackup = costBackup;
+        }
+        File fuelBackup = FileHelper.firstOrDefault(files, CarCostGDriveConst.FUEL_BACKUP_NAME, backup.getId());
+        if(fuelBackup != null){
+            this.fuelBackup = fuelBackup;
+        }
+        File oilBackup = FileHelper.firstOrDefault(files, CarCostGDriveConst.OIL_BACKUP_NAME, backup.getId());
+        if(oilBackup != null){
+            this.oilBackup = oilBackup;
+        }
+        setBackupParentReference();
     }
 
     private void backupOnGDrive() {
         getProgressDialog().show();
         getProgressDialog().setMessage("connecting...");
-        getDriveService().getFiles("title contains backup", this, this, this);
+        getDriveService().getFiles("title contains 'backup'", this, this, this);
     }
 
     private void createBackup() {
@@ -86,7 +92,7 @@ public class GDriveBackup extends GDriveBase implements GetFilesListener {
                     public ExporterBase create(DbHandler dbHandler) {
                         return new OilExporter(dbHandler);
                     }
-                }, oilBackup, OIL_BACKUP_NAME, null);
+                }, oilBackup, CarCostGDriveConst.OIL_BACKUP_NAME, null);
             }
         };
 
@@ -98,7 +104,7 @@ public class GDriveBackup extends GDriveBase implements GetFilesListener {
                     public ExporterBase create(DbHandler dbHandler) {
                         return new FuelExporter(dbHandler);
                     }
-                }, fuelBackup, FUEL_BACKUP_NAME, oilJob);
+                }, fuelBackup, CarCostGDriveConst.FUEL_BACKUP_NAME, oilJob);
             }
         };
 
@@ -107,15 +113,15 @@ public class GDriveBackup extends GDriveBase implements GetFilesListener {
             public ExporterBase create(DbHandler dbHandler) {
                 return new CostExporter(dbHandler);
             }
-        }, costBackup, COST_BACKUP_NAME, fuelJob);
+        }, costBackup, CarCostGDriveConst.COST_BACKUP_NAME, fuelJob);
     }
 
     private void createBackupFolder() {
         if (backup == null) {
-            getProgressDialog().setMessage("creating folder " + BACKUP_APP_FOLDER_NAME);
+            getProgressDialog().setMessage("creating folder " + CarCostGDriveConst.BACKUP_APP_FOLDER_NAME);
             backup = FileBuilder
                     .createNewFolder()
-                    .setTitle(BACKUP_APP_FOLDER_NAME)
+                    .setTitle(CarCostGDriveConst.BACKUP_APP_FOLDER_NAME)
                     .build();
             ParentReference parentReference = new ParentReference();
             parentReference.setId(backupRoot.getId());
@@ -136,10 +142,10 @@ public class GDriveBackup extends GDriveBase implements GetFilesListener {
 
     private void createBackupRootFolder() {
         if (backupRoot == null) {
-            getProgressDialog().setMessage("creating folder " + BACKUP_ROOT_FOLDER_NAME);
+            getProgressDialog().setMessage("creating folder " + CarCostGDriveConst.BACKUP_ROOT_FOLDER_NAME);
             backupRoot = FileBuilder
                     .createNewFolder()
-                    .setTitle(BACKUP_ROOT_FOLDER_NAME)
+                    .setTitle(CarCostGDriveConst.BACKUP_ROOT_FOLDER_NAME)
                     .build();
             getDriveService().uploadFolder(backupRoot, new FolderListener() {
                 @Override

@@ -5,16 +5,11 @@ import android.content.ContentValues;
 import com.sh4dov.carcosts.repositories.DbHandler;
 import com.sh4dov.common.Notificator;
 
-import java.io.File;
+import java.io.Reader;
 
 public class FuelImporter extends ImporterBase {
-    public FuelImporter(File file, DbHandler dbHandler, Notificator notificator) {
-        super(file, dbHandler, notificator);
-    }
-
-    @Override
-    protected String getTable() {
-        return DbHandler.Tables.fuel;
+    public FuelImporter(Reader reader, DbHandler dbHandler, Notificator notificator) {
+        super(reader, dbHandler, notificator);
     }
 
     @Override
@@ -30,5 +25,10 @@ public class FuelImporter extends ImporterBase {
         putIfCan(DbHandler.Tables.Fuel.fuelType, values, cv, 7);
         putIfCan(DbHandler.Tables.Fuel.isDeleted, values, cv, 8);
         return cv;
+    }
+
+    @Override
+    protected String getTable() {
+        return DbHandler.Tables.fuel;
     }
 }
