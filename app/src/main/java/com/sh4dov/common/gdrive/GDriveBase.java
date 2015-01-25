@@ -29,8 +29,9 @@ public class GDriveBase implements UserRecoverableRequestCodeProvider, OnFailedL
     }
 
     public void close() {
-        progressDialog.hide();
         driveService.close();
+        progressDialog.hide();
+        progressDialog.dismiss();
     }
 
     @Override
