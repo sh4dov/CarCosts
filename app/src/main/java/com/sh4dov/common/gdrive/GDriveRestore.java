@@ -25,14 +25,14 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 
-public class GDriveResore extends GDriveBase implements GetFilesListener {
+public class GDriveRestore extends GDriveBase implements GetFilesListener {
     File costBackup = FileBuilder.createNewFile().setTitle(CarCostGDriveConst.COST_BACKUP_NAME).build();
     File fuelBackup = FileBuilder.createNewFile().setTitle(CarCostGDriveConst.FUEL_BACKUP_NAME).build();
     File oilBackup = FileBuilder.createNewFile().setTitle(CarCostGDriveConst.OIL_BACKUP_NAME).build();
     private Activity activity;
     private FragmentOperator fragmentOperator;
 
-    public GDriveResore(DriveService driveService, Activity activity, int reconnectRequestCode, FragmentOperator fragmentOperator) {
+    public GDriveRestore(DriveService driveService, Activity activity, int reconnectRequestCode, FragmentOperator fragmentOperator) {
         super(driveService, activity, reconnectRequestCode);
         this.activity = activity;
         this.fragmentOperator = fragmentOperator;

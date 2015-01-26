@@ -38,7 +38,7 @@ import com.sh4dov.common.SaveFileDialog;
 import com.sh4dov.common.TaskScheduler;
 import com.sh4dov.common.gdrive.GDriveBackup;
 import com.sh4dov.common.gdrive.GDriveBase;
-import com.sh4dov.common.gdrive.GDriveResore;
+import com.sh4dov.common.gdrive.GDriveRestore;
 import com.sh4dov.google.DriveService;
 
 import java.io.File;
@@ -51,7 +51,7 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
     private String costBackupName = "cost.backup.csv";
     private String fuelBackupName = "fuel.backup.csv";
     private GDriveBackup gDriveBackup;
-    private GDriveResore gDriveRestore;
+    private GDriveRestore gDriveRestore;
     private String oilBackupName = "oil.backup.csv";
     private SectionsPagerAdapter pagerAdapter;
     private File path = null;
@@ -213,6 +213,7 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
                     String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                     gDriveRestore.restore(accountName);
                 }
+                break;
         }
     }
 
@@ -228,7 +229,7 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
         viewPager.setCurrentItem(FragmentFactory.FragmentPosition.AddRefueling);
         DriveService driveService = GDriveBase.createService(this);
         gDriveBackup = new GDriveBackup(driveService, this, RequestCodes.Backup);
-        gDriveRestore = new GDriveResore(driveService, this, RequestCodes.Restore, this);
+        gDriveRestore = new GDriveRestore(driveService, this, RequestCodes.Restore, this);
     }
 
     @Override
@@ -360,10 +361,10 @@ public class MainActivity extends Activity implements FragmentOperator, FuelList
     }
 
     private static class RequestCodes {
-        public static final int Backup = 4;
-        public static final int EditCost = 2;
         public static final int EditFuel = 1;
+        public static final int EditCost = 2;
         public static final int EditOil = 3;
+        public static final int Backup = 4;
         public static final int Restore = 5;
     }
 }
